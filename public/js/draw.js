@@ -8,17 +8,6 @@ function drawRectangle(ctx, startX, startY, currentX, currentY) {
     ctx.strokeRect(startX, startY, width, height);
   }
   
-  function createSvgRectangle(svgCanvas, startX, startY, currentX, currentY) {
-    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-    rect.setAttribute('x', Math.min(startX, currentX));
-    rect.setAttribute('y', Math.min(startY, currentY));
-    rect.setAttribute('width', Math.abs(currentX - startX));
-    rect.setAttribute('height', Math.abs(currentY - startY));
-    rect.setAttribute('stroke', 'black');
-    rect.setAttribute('fill', 'transparent');
-    svgCanvas.appendChild(rect);
-  }
-  
   function drawEllipse(ctx, startX, startY, currentX, currentY) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
     const radiusX = Math.abs(currentX - startX) / 2;
@@ -31,11 +20,30 @@ function drawRectangle(ctx, startX, startY, currentX, currentY) {
     ctx.stroke();
   }
   
+  function createSvgRectangle(svgCanvas, startX, startY, currentX, currentY) {
+    const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+    rect.setAttribute('x', Math.min(startX, currentX));
+    rect.setAttribute('y', Math.min(startY, currentY));
+    rect.setAttribute('width', Math.abs(currentX - startX));
+    rect.setAttribute('height', Math.abs(currentY - startY));
+    rect.setAttribute('stroke', 'black');
+    rect.setAttribute('fill', 'transparent');
+    
+    // Add event listener for selection
+    rect.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent click event from reaching parent
+      selectElement(rect);
+    });
+  
+    svgCanvas.appendChild(rect);
+  }
+  
   function createSvgEllipse(svgCanvas, startX, startY, currentX, currentY) {
     const centerX = (currentX + startX) / 2;
     const centerY = (currentY + startY) / 2;
     const radiusX = Math.abs(currentX - startX) / 2;
     const radiusY = Math.abs(currentY - startY) / 2;
+    
     const ellipse = document.createElementNS('http://www.w3.org/2000/svg', 'ellipse');
     ellipse.setAttribute('cx', centerX);
     ellipse.setAttribute('cy', centerY);
@@ -43,8 +51,26 @@ function drawRectangle(ctx, startX, startY, currentX, currentY) {
     ellipse.setAttribute('ry', radiusY);
     ellipse.setAttribute('stroke', 'black');
     ellipse.setAttribute('fill', 'transparent');
+    
+    // Add event listener for selection
+    ellipse.addEventListener('click', function(e) {
+      e.stopPropagation(); // Prevent click event from reaching parent
+      selectElement(ellipse);
+    });
+  
     svgCanvas.appendChild(ellipse);
   }
+  
+  // A function to handle selecting an element
+  function selectElement(element) {
+    // Set all elements to default state
+    const svgElements = document.querySelectorAll('#diagramSvg > *');
+    svgElements.forEach(el => el.setAttribute('stroke', 'black'));
+  
+    // Highlight selected element
+    element.setAttribute('stroke', 'blue');
+  }
+  
   
   function clearCanvas(ctx) {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);

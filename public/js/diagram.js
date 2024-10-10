@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function () {
   let startX = 0;
   let startY = 0;
 
-  // Tool selection logic remains the same
+  // Tool selection logic
   document.querySelectorAll('.tool-icon').forEach((icon) => {
     icon.addEventListener('click', (e) => {
       const toolName = e.target.alt;
@@ -26,12 +26,20 @@ document.addEventListener('DOMContentLoaded', function () {
       // Set the selected tool
       selectedTool = toolName;
       console.log(`Selected tool: ${toolName}`);
+
+      // Enable or disable canvas interaction based on selected tool
+      if (selectedTool === 'Pointer Tool') {
+        tempCanvas.classList.add('disabled'); // Disable canvas interaction
+        enablePointerInteractions(); // Allow SVG element selection
+      } else {
+        tempCanvas.classList.remove('disabled'); // Enable canvas for drawing
+      }
     });
   });
 
   // Event handlers for canvas drawing actions
   tempCanvas.addEventListener('mousedown', (e) => {
-    if (selectedTool) {
+    if (selectedTool && selectedTool !== 'Pointer Tool') {
       isDrawing = true;
       const rect = tempCanvas.getBoundingClientRect();
       startX = e.clientX - rect.left;
@@ -86,5 +94,27 @@ document.addEventListener('DOMContentLoaded', function () {
     link.download = 'diagram.svg';
     link.click();
     console.log('Diagram saved as diagram.svg');
+  }
+
+  // Enable pointer interactions for all SVG elements
+  function enablePointerInteractions() {
+    const svgElements = svgCanvas.querySelectorAll('*');
+    svgElements.forEach((element) => {
+      element.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent click event from reaching parent
+        selectElement(element);
+      });
+    });
+  }
+
+  // Function to select an element (used by pointer tool)
+  function selectElement(element) {
+    // Deselect all elements
+    const svgElements = svgCanvas.querySelectorAll('*');
+    svgElements.forEach((el) => el.setAttribute('stroke', 'black'));
+
+    // Highlight selected element
+    element.setAttribute('stroke', 'blue');
+    console.log(`Selected element: ${element.tagName}`);
   }
 });

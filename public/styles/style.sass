@@ -41,6 +41,8 @@ html, body
     height: 100%
     background: transparent
     z-index: 1
+    &.disabled
+      pointer-events: none // Prevent canvas from blocking interaction when disabled
 
   svg#diagramSvg
     position: absolute
