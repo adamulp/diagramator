@@ -3,7 +3,6 @@ html
   head
     title= title
     link(rel='stylesheet' href='/styles/style.css')
-    script(src='/js/diagram.js')
   body
 
     //- Define mixin for toolbar icons at the top
@@ -12,17 +11,11 @@ html
 
     .layout-container
       //- Vertical toolbar section
-      .toolbar
-        +toolbarIcon('/icons/arrow.svg', 'Arrow Tool')
-        +toolbarIcon('/icons/rectangle.svg', 'Rectangle Tool')
-        +toolbarIcon('/icons/line.svg', 'Line Tool')
-        // Add more toolbar icons as needed
+      include tools
 
       //- Canvas section for drawing diagrams
       .canvas-wrapper
-        canvas#diagramCanvas(width='800' height='600')
+        canvas#tempCanvas
+        svg#diagramSvg
 
-    script.
-      document.addEventListener('DOMContentLoaded', () => {
-        console.log('ER Diagram Tool loaded!');
-      })
+    script(src='/js/diagram.js' type='module')

@@ -1,0 +1,28 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet' href='/styles/style.css')
+  body
+
+    //- Define mixin for toolbar icons at the top
+    mixin toolbarIcon(src, alt)
+      img(src=src alt=alt class='tool-icon')
+
+    .layout-container
+      //- Vertical toolbar section
+      .toolbar
+        +toolbarIcon('/icons/pointer.svg', 'Pointer Tool')
+        +toolbarIcon('/icons/arrow.svg', 'Arrow Tool')
+        +toolbarIcon('/icons/double-arrow.svg', 'Double Arrow Tool')
+        +toolbarIcon('/icons/rectangle.svg', 'Rectangle Tool')
+        +toolbarIcon('/icons/ellipse.svg', 'Ellipse Tool')
+        +toolbarIcon('/icons/line.svg', 'Line Tool')
+        +toolbarIcon('/icons/triangle.svg', 'Triangle Tool')
+        +toolbarIcon('/icons/text.svg', 'Text Tool')
+        +toolbarIcon('/icons/eraser.svg', 'Eraser Tool')
+        +toolbarIcon('/icons/actor.svg', 'Actor Tool')
+        img(src='/icons/save-icon.svg' alt='Save' id='save-icon' class='tool-icon')
+
+
+    script(src='/js/diagram.js' type='module')
