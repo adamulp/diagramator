@@ -94,29 +94,77 @@ function createSvgTriangle(svgCanvas, startX, startY, currentX, currentY) {
     svgCanvas.appendChild(triangle);
 }
 
-// Function to create an actor at a specific position
 function createSvgActor(svgCanvas, x, y) {
-    // Create a group element to contain the actor components
     const actorGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-
-    // Set the position of the group
+    actorGroup.setAttribute('class', 'actor');
     actorGroup.setAttribute('transform', `translate(${x}, ${y})`);
+    actorGroup.setAttribute('stroke', 'black');
+    actorGroup.setAttribute('fill', 'transparent');
 
-    // Add the actor SVG content
-    // For simplicity, let's assume you have the actor SVG content as a string
-    const actorSvgContent = `
-        <circle cx="0" cy="0" r="15" stroke="black" fill="white"/>
-        <line x1="0" y1="15" x2="0" y2="60" stroke="black"/>
-        <line x1="0" y1="30" x2="-20" y2="50" stroke="black"/>
-        <line x1="0" y1="30" x2="20" y2="50" stroke="black"/>
-        <line x1="0" y1="60" x2="-15" y2="90" stroke="black"/>
-        <line x1="0" y1="60" x2="15" y2="90" stroke="black"/>
-    `;
+    // Head
+    const head = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+    head.setAttribute('cx', '0');
+    head.setAttribute('cy', '-30');
+    head.setAttribute('r', '15');
+    head.setAttribute('stroke', 'black');
+    head.setAttribute('fill', 'white');
+    actorGroup.appendChild(head);
 
-    // Set the innerHTML of the group to the actor SVG content
-    actorGroup.innerHTML = actorSvgContent;
+    // Body
+    const body = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    body.setAttribute('x1', '0');
+    body.setAttribute('y1', '-15');
+    body.setAttribute('x2', '0');
+    body.setAttribute('y2', '30');
+    body.setAttribute('stroke', 'black');
+    actorGroup.appendChild(body);
 
-    // Add event listener for selection and dragging
+    // Left Arm
+    const leftArm = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    leftArm.setAttribute('x1', '0');
+    leftArm.setAttribute('y1', '0');
+    leftArm.setAttribute('x2', '-20');
+    leftArm.setAttribute('y2', '10');
+    leftArm.setAttribute('stroke', 'black');
+    actorGroup.appendChild(leftArm);
+
+    // Right Arm
+    const rightArm = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    rightArm.setAttribute('x1', '0');
+    rightArm.setAttribute('y1', '0');
+    rightArm.setAttribute('x2', '20');
+    rightArm.setAttribute('y2', '10');
+    rightArm.setAttribute('stroke', 'black');
+    actorGroup.appendChild(rightArm);
+
+    // Left Leg
+    const leftLeg = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    leftLeg.setAttribute('x1', '0');
+    leftLeg.setAttribute('y1', '30');
+    leftLeg.setAttribute('x2', '-15');
+    leftLeg.setAttribute('y2', '60');
+    leftLeg.setAttribute('stroke', 'black');
+    actorGroup.appendChild(leftLeg);
+
+    // Right Leg
+    const rightLeg = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    rightLeg.setAttribute('x1', '0');
+    rightLeg.setAttribute('y1', '30');
+    rightLeg.setAttribute('x2', '15');
+    rightLeg.setAttribute('y2', '60');
+    rightLeg.setAttribute('stroke', 'black');
+    actorGroup.appendChild(rightLeg);
+
+    // Add Label
+    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+    label.setAttribute('x', '0');
+    label.setAttribute('y', '75');
+    label.setAttribute('text-anchor', 'middle');
+    label.setAttribute('font-size', '14px');
+    label.textContent = 'Actor';
+    actorGroup.appendChild(label);
+
+    // Add event listener for selection
     actorGroup.addEventListener('click', function(e) {
         e.stopPropagation(); // Prevent click event from reaching parent
         selectElement(actorGroup);
@@ -127,7 +175,7 @@ function createSvgActor(svgCanvas, x, y) {
 
 // A function to handle selecting an element
 function selectElement(element) {
-    // Deselect all elements
+    // Set all elements to default state
     const svgElements = document.querySelectorAll('#diagramSvg > *');
     svgElements.forEach(el => el.setAttribute('stroke', 'black'));
 

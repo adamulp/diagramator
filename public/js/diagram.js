@@ -132,18 +132,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Event handler for Actor Tool clicks
-    svgCanvas.addEventListener('click', (e) => {
-        if (selectedTool === 'Actor Tool') {
-            const rect = svgCanvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-
-            createSvgActor(svgCanvas, x, y);
-            console.log(`Actor added at: x=${x}, y=${y}`);
-        }
-    });
-
     // Save SVG Functionality
     function saveAsSVG() {
         const serializer = new XMLSerializer();
@@ -161,6 +149,15 @@ document.addEventListener('DOMContentLoaded', function () {
         const svgElements = svgCanvas.querySelectorAll('*');
         svgElements.forEach((element) => {
             element.addEventListener('mousedown', startDrag);
+            if (element.tagName === 'g') {
+                element.addEventListener('mousedown', startDrag);
+                element.querySelectorAll('use').forEach((useElement) => {
+                    useElement.addEventListener('mousedown', (e) => {
+                        e.stopPropagation();
+                        startDrag(e);
+                    });
+                });
+            }
         });
     }
 
@@ -177,6 +174,8 @@ document.addEventListener('DOMContentLoaded', function () {
         if (selectedTool === 'Pointer Tool') {
             isDragging = true;
             selectedElement = e.target.closest('g, rect, ellipse, polygon, line, circle, text'); // Include group elements
+            if (!selectedElement) return; // Clicked on empty space
+
             const rect = svgCanvas.getBoundingClientRect();
             startX = e.clientX - rect.left;
             startY = e.clientY - rect.top;
@@ -215,16 +214,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     return `${x + dx},${y + dy}`;
                 }).join(' ');
                 selectedElement.setAttribute('points', points);
-
             } else if (selectedElement.tagName === 'g') {
                 // For actors (group elements), update the transform attribute
                 const transform = selectedElement.getAttribute('transform');
                 const translateMatch = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)/.exec(transform);
-                let x = parseFloat(translateMatch[1]);
-                let y = parseFloat(translateMatch[2]);
-                x += dx;
-                y += dy;
-                selectedElement.setAttribute('transform', `translate(${x}, ${y})`);
+                if (translateMatch) {
+                    let x = parseFloat(translateMatch[1]);
+                    let y = parseFloat(translateMatch[2]);
+                    x += dx;
+                    y += dy;
+                    selectedElement.setAttribute('transform', `translate(${x}, ${y})`);
+                }
             }
 
             startX = currentX;
@@ -247,10 +247,23 @@ document.addEventListener('DOMContentLoaded', function () {
     function selectElement(element) {
         // Deselect all elements
         const svgElements = svgCanvas.querySelectorAll('*');
-        svgElements.forEach((el) => el.setAttribute('stroke', 'black'));
+        svgElements.forEach((el) => {
+            setStrokeColor(el, 'black');
+        });
 
         // Highlight selected element
-        element.setAttribute('stroke', 'blue');
+        setStrokeColor(element, 'blue');
         console.log(`Selected element: ${element.tagName}`);
+    }
+
+    // Helper function to recursively set stroke color
+    function setStrokeColor(element, color) {
+        element.setAttribute('stroke', color);
+        // If the element is a group, set stroke on all child elements
+        if (element.children && element.children.length > 0) {
+            Array.from(element.children).forEach((child) => {
+                setStrokeColor(child, color);
+            });
+        }
     }
 });
