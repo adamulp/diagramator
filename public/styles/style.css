@@ -1,0 +1,47 @@
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
+}
+
+.layout-container {
+  display: flex;
+  height: 100vh;
+}
+
+.toolbar {
+  width: 80px;
+  background-color: #333;
+  color: #fff;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.toolbar img.tool-icon {
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.toolbar img.tool-icon:hover {
+  transform: scale(1.1);
+}
+
+.canvas-wrapper {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+}
+.canvas-wrapper canvas {
+  border: 1px solid #333;
+  width: 100%;
+  max-width: 1200px;
+}
+
+/*# sourceMappingURL=style.css.map */

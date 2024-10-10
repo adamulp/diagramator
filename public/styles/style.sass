@@ -1,0 +1,41 @@
+html, body
+  height: 100%
+  margin: 0
+  padding: 0
+  font-family: Arial, sans-serif
+  background-color: #f0f0f0
+
+.layout-container
+  display: flex
+  height: 100vh // Full viewport height
+
+.toolbar
+  width: 80px // Adjust as necessary for your icons
+  background-color: #333
+  color: #fff
+  padding: 1rem
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 1rem // Space between icons
+
+  img.tool-icon
+    width: 40px
+    height: 40px
+    cursor: pointer
+    transition: transform 0.2s
+
+    &:hover
+      transform: scale(1.1)
+
+.canvas-wrapper
+  flex: 1 // Take up remaining width
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 1rem
+
+  canvas
+    border: 1px solid #333
+    width: 100%
+    max-width: 1200px // Optional: to prevent it from getting too wide
