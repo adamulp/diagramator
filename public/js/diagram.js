@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', function () {
   const ctx = tempCanvas.getContext('2d');
   let selectedTool = null;
   let isDrawing = false;
+  let isDragging = false;
+  let selectedElement = null;
   let startX = 0;
   let startY = 0;
 
@@ -100,11 +102,62 @@ document.addEventListener('DOMContentLoaded', function () {
   function enablePointerInteractions() {
     const svgElements = svgCanvas.querySelectorAll('*');
     svgElements.forEach((element) => {
-      element.addEventListener('click', (e) => {
-        e.stopPropagation(); // Prevent click event from reaching parent
-        selectElement(element);
-      });
+      element.addEventListener('mousedown', startDrag);
     });
+  }
+
+  // Start dragging an element
+  function startDrag(e) {
+    if (selectedTool === 'Pointer Tool') {
+      isDragging = true;
+      selectedElement = e.target;
+      const rect = svgCanvas.getBoundingClientRect();
+      startX = e.clientX - rect.left;
+      startY = e.clientY - rect.top;
+
+      console.log(`Dragging started for: ${selectedElement.tagName}`);
+
+      svgCanvas.addEventListener('mousemove', dragElement);
+      svgCanvas.addEventListener('mouseup', endDrag);
+    }
+  }
+
+  // Dragging the selected element
+  function dragElement(e) {
+    if (isDragging && selectedElement) {
+      const rect = svgCanvas.getBoundingClientRect();
+      const currentX = e.clientX - rect.left;
+      const currentY = e.clientY - rect.top;
+
+      const dx = currentX - startX;
+      const dy = currentY - startY;
+
+      if (selectedElement.tagName === 'rect') {
+        const newX = parseFloat(selectedElement.getAttribute('x')) + dx;
+        const newY = parseFloat(selectedElement.getAttribute('y')) + dy;
+        selectedElement.setAttribute('x', newX);
+        selectedElement.setAttribute('y', newY);
+      } else if (selectedElement.tagName === 'ellipse') {
+        const newCx = parseFloat(selectedElement.getAttribute('cx')) + dx;
+        const newCy = parseFloat(selectedElement.getAttribute('cy')) + dy;
+        selectedElement.setAttribute('cx', newCx);
+        selectedElement.setAttribute('cy', newCy);
+      }
+
+      startX = currentX;
+      startY = currentY;
+
+      console.log(`Element moved to: ${selectedElement.tagName} (x: ${currentX}, y: ${currentY})`);
+    }
+  }
+
+  // End dragging the selected element
+  function endDrag() {
+    isDragging = false;
+    selectedElement = null;
+    svgCanvas.removeEventListener('mousemove', dragElement);
+    svgCanvas.removeEventListener('mouseup', endDrag);
+    console.log('Dragging ended');
   }
 
   // Function to select an element (used by pointer tool)
