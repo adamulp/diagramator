@@ -11,6 +11,29 @@ document.addEventListener('DOMContentLoaded', function () {
   let startX = 0;
   let startY = 0;
 
+  // Function to synchronize canvas size with displayed size
+  function resizeCanvas() {
+    tempCanvas.width = tempCanvas.clientWidth;
+    tempCanvas.height = tempCanvas.clientHeight;
+  }
+
+  // Function to synchronize SVG size and viewBox with displayed size
+  function resizeSVG() {
+    const width = svgCanvas.clientWidth;
+    const height = svgCanvas.clientHeight;
+    svgCanvas.setAttribute('width', width);
+    svgCanvas.setAttribute('height', height);
+    svgCanvas.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  }
+
+  // Call resize functions on window resize and initially
+  window.addEventListener('resize', () => {
+    resizeCanvas();
+    resizeSVG();
+  });
+  resizeCanvas();
+  resizeSVG();
+
   // Tool selection logic
   document.querySelectorAll('.tool-icon').forEach((icon) => {
     icon.addEventListener('click', (e) => {
