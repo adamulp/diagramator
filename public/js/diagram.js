@@ -3,7 +3,7 @@ import { drawRectangle, createSvgRectangle, drawEllipse, createSvgEllipse, clear
 document.addEventListener('DOMContentLoaded', function () {
   const tempCanvas = document.getElementById('tempCanvas');
   const svgCanvas = document.getElementById('diagramSvg');
-  const ctx = tempCanvas.getContext('2d');
+  let ctx = tempCanvas.getContext('2d'); // Store initial context reference
   let selectedTool = null;
   let isDrawing = false;
   let isDragging = false;
@@ -13,8 +13,16 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // Function to synchronize canvas size with displayed size
   function resizeCanvas() {
-    tempCanvas.width = tempCanvas.clientWidth;
-    tempCanvas.height = tempCanvas.clientHeight;
+    // Get the new dimensions
+    const width = tempCanvas.clientWidth;
+    const height = tempCanvas.clientHeight;
+
+    // Set the canvas size (this will clear the canvas)
+    tempCanvas.width = width;
+    tempCanvas.height = height;
+
+    // Reassign the context to avoid clearing effects
+    ctx = tempCanvas.getContext('2d');
   }
 
   // Function to synchronize SVG size and viewBox with displayed size
