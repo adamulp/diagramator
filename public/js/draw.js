@@ -94,9 +94,40 @@ function createSvgTriangle(svgCanvas, startX, startY, currentX, currentY) {
     svgCanvas.appendChild(triangle);
 }
 
+// Function to create an actor at a specific position
+function createSvgActor(svgCanvas, x, y) {
+    // Create a group element to contain the actor components
+    const actorGroup = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+    // Set the position of the group
+    actorGroup.setAttribute('transform', `translate(${x}, ${y})`);
+
+    // Add the actor SVG content
+    // For simplicity, let's assume you have the actor SVG content as a string
+    const actorSvgContent = `
+        <circle cx="0" cy="0" r="15" stroke="black" fill="white"/>
+        <line x1="0" y1="15" x2="0" y2="60" stroke="black"/>
+        <line x1="0" y1="30" x2="-20" y2="50" stroke="black"/>
+        <line x1="0" y1="30" x2="20" y2="50" stroke="black"/>
+        <line x1="0" y1="60" x2="-15" y2="90" stroke="black"/>
+        <line x1="0" y1="60" x2="15" y2="90" stroke="black"/>
+    `;
+
+    // Set the innerHTML of the group to the actor SVG content
+    actorGroup.innerHTML = actorSvgContent;
+
+    // Add event listener for selection and dragging
+    actorGroup.addEventListener('click', function(e) {
+        e.stopPropagation(); // Prevent click event from reaching parent
+        selectElement(actorGroup);
+    });
+
+    svgCanvas.appendChild(actorGroup);
+}
+
 // A function to handle selecting an element
 function selectElement(element) {
-    // Set all elements to default state
+    // Deselect all elements
     const svgElements = document.querySelectorAll('#diagramSvg > *');
     svgElements.forEach(el => el.setAttribute('stroke', 'black'));
 
@@ -115,5 +146,6 @@ export {
     createSvgEllipse, 
     drawTriangle, 
     createSvgTriangle, 
+    createSvgActor,
     clearCanvas 
 };

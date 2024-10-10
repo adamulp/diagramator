@@ -6,6 +6,7 @@ import {
     createSvgEllipse, 
     drawTriangle, 
     createSvgTriangle, 
+    createSvgActor, 
     clearCanvas 
 } from './draw.js';
 
@@ -67,6 +68,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 enablePointerInteractions(); // Allow SVG element selection
             } else {
                 tempCanvas.classList.remove('disabled'); // Enable canvas for drawing
+                disablePointerInteractions(); // Disable pointer interactions
             }
         });
     });
@@ -74,11 +76,19 @@ document.addEventListener('DOMContentLoaded', function () {
     // Event handlers for canvas drawing actions
     tempCanvas.addEventListener('mousedown', (e) => {
         if (selectedTool && selectedTool !== 'Pointer Tool') {
-            isDrawing = true;
-            const rect = tempCanvas.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
-            console.log(`Mouse Down: startX=${startX}, startY=${startY}`);
+            if (selectedTool === 'Actor Tool') {
+                const rect = tempCanvas.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                createSvgActor(svgCanvas, x, y);
+                console.log(`Actor placed at: x=${x}, y=${y}`);
+            } else {
+                isDrawing = true;
+                const rect = tempCanvas.getBoundingClientRect();
+                startX = e.clientX - rect.left;
+                startY = e.clientY - rect.top;
+                console.log(`Mouse Down: startX=${startX}, startY=${startY}`);
+            }
         }
     });
 
@@ -122,6 +132,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Event handler for Actor Tool clicks
+    svgCanvas.addEventListener('click', (e) => {
+        if (selectedTool === 'Actor Tool') {
+            const rect = svgCanvas.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+
+            createSvgActor(svgCanvas, x, y);
+            console.log(`Actor added at: x=${x}, y=${y}`);
+        }
+    });
+
     // Save SVG Functionality
     function saveAsSVG() {
         const serializer = new XMLSerializer();
@@ -142,11 +164,19 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // Disable pointer interactions when not using Pointer Tool
+    function disablePointerInteractions() {
+        const svgElements = svgCanvas.querySelectorAll('*');
+        svgElements.forEach((element) => {
+            element.removeEventListener('mousedown', startDrag);
+        });
+    }
+
     // Start dragging an element
     function startDrag(e) {
         if (selectedTool === 'Pointer Tool') {
             isDragging = true;
-            selectedElement = e.target;
+            selectedElement = e.target.closest('g, rect, ellipse, polygon, line, circle, text'); // Include group elements
             const rect = svgCanvas.getBoundingClientRect();
             startX = e.clientX - rect.left;
             startY = e.clientY - rect.top;
@@ -185,6 +215,16 @@ document.addEventListener('DOMContentLoaded', function () {
                     return `${x + dx},${y + dy}`;
                 }).join(' ');
                 selectedElement.setAttribute('points', points);
+
+            } else if (selectedElement.tagName === 'g') {
+                // For actors (group elements), update the transform attribute
+                const transform = selectedElement.getAttribute('transform');
+                const translateMatch = /translate\(\s*([^\s,)]+)[ ,]([^\s,)]+)/.exec(transform);
+                let x = parseFloat(translateMatch[1]);
+                let y = parseFloat(translateMatch[2]);
+                x += dx;
+                y += dy;
+                selectedElement.setAttribute('transform', `translate(${x}, ${y})`);
             }
 
             startX = currentX;

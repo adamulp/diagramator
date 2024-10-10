@@ -57,4 +57,17 @@ html, body {
   z-index: 0;
 }
 
+.actor circle {
+  stroke-width: 2px;
+}
+
+.actor line {
+  stroke-width: 2px;
+}
+
+.actor text {
+  font-family: Arial, sans-serif;
+  fill: black;
+}
+
 /*# sourceMappingURL=style.css.map */
