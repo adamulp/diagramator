@@ -51,6 +51,7 @@ export default class CanvasItem {
         this.startY = 0;
     }
 
+    // TO DO: Set initial coordinates for starting drawing
     setStartCoords(x, y) {
         this.startX = x;
         this.startY = y;
@@ -71,6 +72,7 @@ export default class Rectangle extends CanvasItem {
         super(ctx, svgCanvas);
     }
 
+    // TO DO: Draw rectangle preview on canvas
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const width = currentX - this.startX;
@@ -79,6 +81,7 @@ export default class Rectangle extends CanvasItem {
         this.ctx.strokeRect(this.startX, this.startY, width, height);
     }
 
+    // TO DO: Create final rectangle SVG element
     createFinal(currentX, currentY) {
         const attributes = {
             x: Math.min(this.startX, currentX),
@@ -107,6 +110,7 @@ export default class Ellipse extends CanvasItem {
         super(ctx, svgCanvas);
     }
 
+    // TO DO: Draw ellipse preview on canvas
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const radiusX = Math.abs(currentX - this.startX) / 2;
@@ -119,6 +123,7 @@ export default class Ellipse extends CanvasItem {
         this.ctx.stroke();
     }
 
+    // TO DO: Create final ellipse SVG element
     createFinal(currentX, currentY) {
         const attributes = {
             cx: (currentX + this.startX) / 2,
@@ -147,6 +152,7 @@ export default class Actor extends CanvasItem {
         super(ctx, svgCanvas);
     }
 
+    // TO DO: Create actor group with head, body, and limbs
     createFinal(x, y) {
         const actorGroup = createSvgElement('g', {
             class: 'actor',
@@ -173,12 +179,22 @@ export default class Actor extends CanvasItem {
             stroke: 'black'
         });
 
+        // Left Arm - TO DO
+        // Right Arm - TO DO
+        // Left Leg - TO DO
+        // Right Leg - TO DO
+        // Label - TO DO
+
         // Append elements to actor group
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
-
-        // Arms and legs can be added similarly...
-
+        
+        // Add event listener for selection
+        actorGroup.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            // selectElement(actorGroup); - TO DO: Selection mechanism
+        });
+        
         appendSvgElement(this.svgCanvas, actorGroup);
     }
 }
@@ -197,6 +213,7 @@ export default class Triangle extends CanvasItem {
         super(ctx, svgCanvas);
     }
 
+    // TO DO: Draw triangle preview on canvas
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.beginPath();
@@ -208,6 +225,7 @@ export default class Triangle extends CanvasItem {
         this.ctx.stroke();
     }
 
+    // TO DO: Create final triangle SVG element
     createFinal(currentX, currentY) {
         const points = `${this.startX},${this.startY} ${currentX},${currentY} ${this.startX - (currentX - this.startX)},${currentY}`;
         const attributes = {
@@ -235,102 +253,3 @@ export default class Shape extends CanvasItem {
 
     // Common methods for shapes can be added here in the future
 }
-"""
-    with open('canvas/Shape.js', 'w') as f:
-        f.write(content.strip())
-
-def write_diagram():
-    """Writes content to diagram.js."""
-    content = """
-import Rectangle from './canvas/Rectangle.js';
-import Ellipse from './canvas/Ellipse.js';
-import Triangle from './canvas/Triangle.js';
-import Actor from './canvas/Actor.js';
-
-// diagram.js code with appropriate changes and imports
-
-document.addEventListener('DOMContentLoaded', function () {
-    const tempCanvas = document.getElementById('tempCanvas');
-    const svgCanvas = document.getElementById('diagramSvg');
-    const ctx = tempCanvas.getContext('2d');
-    let selectedTool = null;
-    let isDrawing = false;
-    let startX = 0;
-    let startY = 0;
-
-    // Tool selection logic
-    document.querySelectorAll('.tool-icon').forEach((icon) => {
-        icon.addEventListener('click', (e) => {
-            const toolName = e.target.alt;
-
-            // Set the selected tool
-            switch (toolName) {
-                case 'Rectangle Tool':
-                    selectedTool = new Rectangle(ctx, svgCanvas);
-                    break;
-                case 'Ellipse Tool':
-                    selectedTool = new Ellipse(ctx, svgCanvas);
-                    break;
-                case 'Triangle Tool':
-                    selectedTool = new Triangle(ctx, svgCanvas);
-                    break;
-                case 'Actor Tool':
-                    selectedTool = new Actor(ctx, svgCanvas);
-                    break;
-                default:
-                    selectedTool = null;
-            }
-            console.log(`Selected tool: ${toolName}`);
-        });
-    });
-
-    // Event handlers for canvas drawing actions
-    tempCanvas.addEventListener('mousedown', (e) => {
-        if (selectedTool) {
-            isDrawing = true;
-            const rect = tempCanvas.getBoundingClientRect();
-            startX = e.clientX - rect.left;
-            startY = e.clientY - rect.top;
-            selectedTool.setStartCoords(startX, startY);
-            console.log(`Mouse Down: startX=${startX}, startY=${startY}`);
-        }
-    });
-
-    tempCanvas.addEventListener('mousemove', (e) => {
-        if (isDrawing && selectedTool) {
-            const rect = tempCanvas.getBoundingClientRect();
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
-            selectedTool.drawPreview(currentX, currentY);
-            console.log(`Mouse Move: currentX=${currentX}, currentY=${currentY}`);
-        }
-    });
-
-    tempCanvas.addEventListener('mouseup', (e) => {
-        if (isDrawing && selectedTool) {
-            const rect = tempCanvas.getBoundingClientRect();
-            const currentX = e.clientX - rect.left;
-            const currentY = e.clientY - rect.top;
-            selectedTool.createFinal(currentX, currentY);
-            isDrawing = false;
-            console.log(`Mouse Up: currentX=${currentX}, currentY=${currentY}`);
-        }
-    });
-});
-"""
-    with open('diagram.js', 'w') as f:
-        f.write(content.strip())
-
-def main():
-    create_directory_structure()
-    write_svg_utils()
-    write_canvas_item()
-    write_rectangle()
-    write_ellipse()
-    write_actor()
-    write_triangle()
-    write_shape()
-    write_diagram()
-
-if __name__ == "__main__":
-    main()
