@@ -388,10 +388,10 @@ export default class Actor extends CanvasItem {
         appendSvgElement(this.svgCanvas, actorGroup);
     }
 }
-
+```
 
 ### Summary of Changes
+
 - **Refactor into Classes**: We split logic into different classes and placed them in individual files for better modularity.
 - **Unified `CanvasItem` Class**: Combines the drawing logic for canvas previews and the creation of SVG elements.
 - **Shape-Specific Classes**: `Rectangle`, `Ellipse`, `Triangle`, and `Actor`
-```
