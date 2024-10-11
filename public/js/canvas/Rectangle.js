@@ -1,5 +1,5 @@
 import Shape from './Shape.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
+import { createSvgElement, appendSvgElement, createSvgGroup } from '../utils/SvgUtils.js';
 
 export default class Rectangle extends Shape {
     constructor(ctx, svgCanvas) {
@@ -9,7 +9,6 @@ export default class Rectangle extends Shape {
         this.startY = 0;
     }
 
-    // Method to set the starting coordinates
     setStartCoords(x, y) {
         this.startX = x;
         this.startY = y;
@@ -54,21 +53,25 @@ export default class Rectangle extends Shape {
             this.previewElement.setAttribute('height', height);
         }
     }
-
-    // Implement the createFinal method
     createFinal(currentX, currentY) {
-        const attributes = {
-            x: Math.min(this.startX, currentX),
-            y: Math.min(this.startY, currentY),
-            width: Math.abs(currentX - this.startX),
-            height: Math.abs(currentY - this.startY),
-            stroke: 'black',
-            fill: 'transparent'
-        };
-        const rect = createSvgElement('rect', attributes);
-
-        appendSvgElement(this.svgCanvas, rect);
-
+        const width = currentX - this.startX;
+        const height = currentY - this.startY;
+        const rect = createSvgElement('rect', {
+            x: this.startX,
+            y: this.startY,
+            width: width,
+            height: height
+        });
+        
+        // Create a group for the rectangle and add it to the svgCanvas
+        const rectGroup = createSvgGroup(
+            {
+                stroke: 'black',
+                fill: 'transparent'
+            }
+        );
+        rectGroup.appendChild(rect);
+        appendSvgElement(this.svgCanvas, rectGroup);
         // Remove the preview element after finalizing
         if (this.previewElement) {
             this.svgCanvas.removeChild(this.previewElement);

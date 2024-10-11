@@ -1,5 +1,5 @@
 import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
+import { createSvgElement, appendSvgElement, createSvgGroup } from '../utils/SvgUtils.js';
 
 export default class Actor extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -7,8 +7,14 @@ export default class Actor extends CanvasItem {
     }
 
     createFinal(x, y) {
-        // Create the actor SVG group, including head, body, arms, and legs.
-        const actorGroup = createSvgElement('g', {
+        // Create the actor SVG group
+        const actorGroup = createSvgGroup(this.svgCanvas, {
+            class: 'actor',
+            transform: `translate(${x}, ${y})`,
+            stroke: 'black',
+            fill: 'transparent'
+        });
+        createSvgElement('g', {
             class: 'actor',
             transform: `translate(${x}, ${y})`,
             stroke: 'black',

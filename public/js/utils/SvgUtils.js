@@ -1,13 +1,21 @@
-export function createSvgElement(type, attributes) {
-    const element = document.createElementNS('http://www.w3.org/2000/svg', type);
+// Create svg element
+export function createSvgElement(tag, attributes) {
+    const element = document.createElementNS('http://www.w3.org/2000/svg', tag);
     Object.keys(attributes).forEach((key) => {
         element.setAttribute(key, attributes[key]);
     });
     return element;
 }
 
-export function appendSvgElement(svgCanvas, element) {
-    svgCanvas.appendChild(element);
+// Create svg <g> group
+export function createSvgGroup(attrributes) {
+    const group = createSvgElement('g', attrributes);
+    return group;
+}
+
+// Append svg element to a group
+export function appendSvgElement(svgGroup, element) {
+    svgGroup.appendChild(element);
 }
 
 // Function to handle selecting an element
