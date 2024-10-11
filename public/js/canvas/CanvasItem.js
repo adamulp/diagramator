@@ -11,13 +11,6 @@ export default class CanvasItem {
         this.startX = x;
         this.startY = y;
     }
-    // Add event listener for selection
-    addSelectionListener(element) {
-        element.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent click event from reaching parent
-            selectElement(element);
-        });
-    }
 
     // Method to handle selecting an element
     selectElement(element) {

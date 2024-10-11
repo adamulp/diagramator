@@ -6,17 +6,23 @@ export default class Rectangle extends Shape {
         super(ctx, svgCanvas);
     }
 
-    drawPreview(currentX, currentY) {
-        // TO DO: Draw a preview of the rectangle on the temporary canvas under the mouse cursor where the svg will
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        const width = currentX - this.startX;
-        const height = currentY - this.startY;
-        this.ctx.strokeStyle = 'black';
-        this.ctx.strokeRect(this.startX, this.startY, width, height);
+    // Override to calculate rectangle-specific dimensions
+    getDimensions(currentX, currentY) {
+        return {
+            startX: this.startX,
+            startY: this.startY,
+            width: currentX - this.startX,
+            height: currentY - this.startY
+        };
     }
 
+    // Override to draw a rectangle preview
+    drawShapePreview(startX, startY, width, height) {
+        this.ctx.strokeRect(startX, startY, width, height);
+    }
+
+    // Implement the createFinal method
     createFinal(currentX, currentY) {
-        // TO DO: Create the final SVG rectangle and append it to the SVG canvas.
         const attributes = {
             x: Math.min(this.startX, currentX),
             y: Math.min(this.startY, currentY),
