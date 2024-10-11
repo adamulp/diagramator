@@ -1,302 +1,185 @@
-## Full Manual Changes with Versions and File Alignment
+## Refactoring Project File Structure with Object-Oriented Design
 
-Let’s focus on making complete, versioned changes to avoid misalignment and confusion. I will outline all changes clearly for each file so you can work seamlessly, without having to piece things together. This way, every edit is easy to follow, versioned, and applied in full.
+Let's take a fresh approach by refactoring the project into a more maintainable, object-oriented structure. This change will split classes into separate files for better modularity, which will make development more sustainable in the long run.
 
-### Step 1: Complete Version Updates for Each File
+### Proposed File Structure
 
-#### File 1: `style.sass` (Full Updated Version)
-
-Replace the entire `public/styles/style.sass` file content with the following:
-
-```sass
-html, body
-  height: 100%
-  margin: 0
-  padding: 0
-  font-family: Arial, sans-serif
-  background-color: #f0f0f0
-
-.layout-container
-  display: flex
-  height: 100vh // Full viewport height
-
-.toolbar
-  width: 80px // Adjust to fit your icons comfortably
-  background-color: #333
-  color: #fff
-  padding: 1rem
-  display: flex
-  flex-direction: column
-  align-items: center
-  gap: 1rem // Adds spacing between the toolbar icons
-
-  img.tool-icon
-    width: 40px
-    height: 40px
-    cursor: pointer
-    transition: transform 0.2s
-
-    &:hover
-      transform: scale(1.1)
-
-.canvas-wrapper
-  position: relative
-  width: 100%
-  height: 100%
-
-  canvas#tempCanvas
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    background: transparent
-    z-index: 1
-    &.disabled
-      pointer-events: none // Prevent canvas from blocking interaction when disabled
-
-  svg#diagramSvg
-    position: absolute
-    top: 0
-    left: 0
-    width: 100%
-    height: 100%
-    z-index: 2
-
-    // Style for actor groups
-    g.actor
-      cursor: pointer
-      transition: transform 0.2s, stroke 0.2s
-
-      &:hover
-        stroke: blue // Hover state to indicate interactivity
-
-      &.selected
-        stroke: blue
-        fill: rgba(0, 0, 255, 0.1) // Light blue fill to indicate selection
-
-    // Adding consistent styles to lines, circles, and other shapes in actors
-    line, circle, text
-      pointer-events: visiblePainted // Allow clicks on all painted elements
-
-    // Bounding box for selection
-    rect.bounding-box
-      fill: transparent
-      stroke: blue
-      stroke-dasharray: 5, 5
-      pointer-events: none // Bounding box is for visual purposes only
+```
+.
+├── app.js
+├── LICENSE
+├── package.json
+├── package-lock.json
+├── public
+│   ├── icons
+│   ├── js
+│   │   ├── main.js (Entry point for JavaScript)
+│   │   ├── classes
+│   │   │   ├── ObjectDrawing.js
+│   │   │   ├── SvgObject.js
+│   │   │   ├── CanvasItem.js
+│   │   │   ├── Rectangle.js
+│   │   │   ├── Ellipse.js
+│   │   │   ├── Triangle.js
+│   │   │   └── Actor.js
+│   └── styles
+│       ├── style.css
+│       ├── style.css.map
+│       └── style.sass
+├── README.md
+└── views
+    ├── index.pug
+    └── tools.pug
 ```
 
-### Step 2: Full JavaScript Updates with Context
+### Explanation of Classes
 
-#### File 2: `diagram.js` (Full Updated Version)
+1. **ObjectDrawing**: Manages the drawing logic on the HTML canvas element (`tempCanvas`), primarily for preview while drawing.
+2. **SvgObject**: Manages the creation and manipulation of SVG elements for the finalized version of the drawing.
+3. **CanvasItem**: Combines both `ObjectDrawing` and `SvgObject` attributes to provide a complete representation of an item that can be drawn on the canvas and represented as SVG.
+4. **Rectangle, Ellipse, Triangle, Actor**: Specific item classes that inherit from `CanvasItem` and add specialized behaviors for each shape.
 
-Replace the entire content of `public/js/diagram.js` with:
+### Implementation Details
+
+#### 1. `ObjectDrawing.js`
 
 ```javascript
-import {
-  drawRectangle,
-  createSvgRectangle,
-  drawEllipse,
-  createSvgEllipse,
-  drawTriangle,
-  createSvgTriangle,
-  createSvgActor,
-  clearCanvas,
-} from "./draw.js";
-
-document.addEventListener("DOMContentLoaded", function () {
-  const tempCanvas = document.getElementById("tempCanvas");
-  const svgCanvas = document.getElementById("diagramSvg");
-  let ctx = tempCanvas.getContext("2d");
-  let selectedTool = null;
-  let isDrawing = false;
-  let isDragging = false;
-  let selectedElement = null;
-  let startX = 0;
-  let startY = 0;
-
-  // Function to synchronize canvas size with displayed size
-  function resizeCanvas() {
-    tempCanvas.width = tempCanvas.clientWidth;
-    tempCanvas.height = tempCanvas.clientHeight;
+export default class ObjectDrawing {
+  constructor(ctx) {
+    this.ctx = ctx;
   }
 
-  // Function to synchronize SVG size and viewBox with displayed size
-  function resizeSVG() {
-    const width = svgCanvas.clientWidth;
-    const height = svgCanvas.clientHeight;
-    svgCanvas.setAttribute("width", width);
-    svgCanvas.setAttribute("height", height);
-    svgCanvas.setAttribute("viewBox", `0 0 ${width} ${height}`);
+  drawRectangle(startX, startY, currentX, currentY) {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    const width = currentX - startX;
+    const height = currentY - startY;
+    this.ctx.strokeStyle = "black";
+    this.ctx.strokeRect(startX, startY, width, height);
   }
 
-  // Call resize functions on window resize and initially
-  window.addEventListener("resize", () => {
-    resizeCanvas();
-    resizeSVG();
-    ctx = tempCanvas.getContext("2d"); // Ensure the context is always correct after resizing
-  });
-  resizeCanvas();
-  resizeSVG();
-
-  // Tool selection logic
-  document.querySelectorAll(".tool-icon").forEach((icon) => {
-    icon.addEventListener("click", (e) => {
-      const toolName = e.target.alt;
-
-      if (toolName === "Save") {
-        saveAsSVG();
-        return; // Skip selecting a drawing tool
-      }
-
-      // Deselect other tools and add 'selected' class to the clicked tool
-      document
-        .querySelectorAll(".tool-icon")
-        .forEach((t) => t.classList.remove("selected"));
-      e.target.classList.add("selected");
-
-      // Set the selected tool
-      selectedTool = toolName;
-      console.log(`Selected tool: ${toolName}`);
-
-      // Enable or disable canvas interaction based on selected tool
-      if (selectedTool === "Pointer Tool") {
-        tempCanvas.classList.add("disabled"); // Disable canvas interaction
-        enablePointerInteractions(); // Allow SVG element selection
-      } else {
-        tempCanvas.classList.remove("disabled"); // Enable canvas for drawing
-        disablePointerInteractions(); // Disable pointer interactions
-        ctx = tempCanvas.getContext("2d"); // Ensure canvas context is correct
-      }
-    });
-  });
-
-  // Event handlers for canvas drawing actions
-  tempCanvas.addEventListener("mousedown", (e) => {
-    if (selectedTool && selectedTool !== "Pointer Tool") {
-      isDrawing = true;
-      const rect = tempCanvas.getBoundingClientRect();
-      startX = e.clientX - rect.left;
-      startY = e.clientY - rect.top;
-      console.log(`Mouse Down: startX=${startX}, startY=${startY}`);
-    }
-  });
-
-  tempCanvas.addEventListener("mousemove", (e) => {
-    if (isDrawing) {
-      const rect = tempCanvas.getBoundingClientRect();
-      const currentX = e.clientX - rect.left;
-      const currentY = e.clientY - rect.top;
-
-      if (selectedTool === "Rectangle Tool") {
-        drawRectangle(ctx, startX, startY, currentX, currentY);
-      } else if (selectedTool === "Ellipse Tool") {
-        drawEllipse(ctx, startX, startY, currentX, currentY);
-      }
-
-      console.log(`Mouse Move: currentX=${currentX}, currentY=${currentY}`);
-    }
-  });
-
-  tempCanvas.addEventListener("mouseup", (e) => {
-    if (isDrawing) {
-      const rect = tempCanvas.getBoundingClientRect();
-      const currentX = e.clientX - rect.left;
-      const currentY = e.clientY - rect.top;
-
-      if (selectedTool === "Rectangle Tool") {
-        createSvgRectangle(svgCanvas, startX, startY, currentX, currentY);
-      } else if (selectedTool === "Ellipse Tool") {
-        createSvgEllipse(svgCanvas, startX, startY, currentX, currentY);
-      }
-
-      // Stop drawing and clear the temporary canvas
-      isDrawing = false;
-      ctx = tempCanvas.getContext("2d"); // Ensure context after clearing
-      clearCanvas(ctx);
-
-      console.log(`Mouse Up: currentX=${currentX}, currentY=${currentY}`);
-    }
-  });
-
-  // Enable pointer interactions for all SVG elements
-  function enablePointerInteractions() {
-    const svgElements = svgCanvas.querySelectorAll("*");
-    svgElements.forEach((element) => {
-      element.addEventListener("mousedown", startDrag);
-    });
+  drawEllipse(startX, startY, currentX, currentY) {
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    const radiusX = Math.abs(currentX - startX) / 2;
+    const radiusY = Math.abs(currentY - startY) / 2;
+    const centerX = (currentX + startX) / 2;
+    const centerY = (currentY + startY) / 2;
+    this.ctx.beginPath();
+    this.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+    this.ctx.strokeStyle = "black";
+    this.ctx.stroke();
   }
-
-  // Disable pointer interactions
-  function disablePointerInteractions() {
-    const svgElements = svgCanvas.querySelectorAll("*");
-    svgElements.forEach((element) => {
-      element.removeEventListener("mousedown", startDrag);
-    });
-  }
-
-  // Start dragging an element
-  function startDrag(e) {
-    if (selectedTool === "Pointer Tool") {
-      isDragging = true;
-      selectedElement = e.target.closest(
-        "g, rect, ellipse, polygon, line, circle, text"
-      ); // Include group elements
-      if (!selectedElement) return; // Clicked on empty space
-
-      const rect = svgCanvas.getBoundingClientRect();
-      startX = e.clientX - rect.left;
-      startY = e.clientY - rect.top;
-
-      console.log(`Dragging started for: ${selectedElement.tagName}`);
-
-      svgCanvas.addEventListener("mousemove", dragElement);
-      svgCanvas.addEventListener("mouseup", endDrag);
-    }
-  }
-
-  // Dragging the selected element
-  function dragElement(e) {
-    if (isDragging && selectedElement) {
-      const rect = svgCanvas.getBoundingClientRect();
-      const currentX = e.clientX - rect.left;
-      const currentY = e.clientY - rect.top;
-
-      const dx = currentX - startX;
-      const dy = currentY - startY;
-
-      if (selectedElement.tagName === "g") {
-        const transform = selectedElement.transform.baseVal.getItem(0);
-        transform.setTranslate(
-          transform.matrix.e + dx,
-          transform.matrix.f + dy
-        );
-      }
-
-      startX = currentX;
-      startY = currentY;
-
-      console.log(
-        `Element moved to: ${selectedElement.tagName} (x: ${currentX}, y: ${currentY})`
-      );
-    }
-  }
-
-  // End dragging the selected element
-  function endDrag() {
-    isDragging = false;
-    selectedElement = null;
-    svgCanvas.removeEventListener("mousemove", dragElement);
-    svgCanvas.removeEventListener("mouseup", endDrag);
-    console.log("Dragging ended");
-  }
-});
+  // More drawing methods for other shapes can go here...
+}
 ```
 
-### Summary
+#### 2. `SvgObject.js`
 
-- **Full File Versions**: Provided full versions of `style.sass` and `diagram.js` for better clarity.
-- **No Patches**: Replace the file contents completely to ensure alignment, preserving all features.
+```javascript
+export default class SvgObject {
+  constructor(svgCanvas) {
+    this.svgCanvas = svgCanvas;
+  }
 
-Let me know if this approach works better for you, or if you need further modifications or support!
+  createSvgRectangle(startX, startY, currentX, currentY) {
+    const rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    rect.setAttribute("x", Math.min(startX, currentX));
+    rect.setAttribute("y", Math.min(startY, currentY));
+    rect.setAttribute("width", Math.abs(currentX - startX));
+    rect.setAttribute("height", Math.abs(currentY - startY));
+    rect.setAttribute("stroke", "black");
+    rect.setAttribute("fill", "transparent");
+    this.svgCanvas.appendChild(rect);
+    return rect;
+  }
+
+  createSvgEllipse(startX, startY, currentX, currentY) {
+    const ellipse = document.createElementNS(
+      "http://www.w3.org/2000/svg",
+      "ellipse"
+    );
+    const centerX = (currentX + startX) / 2;
+    const centerY = (currentY + startY) / 2;
+    const radiusX = Math.abs(currentX - startX) / 2;
+    const radiusY = Math.abs(currentY - startY) / 2;
+    ellipse.setAttribute("cx", centerX);
+    ellipse.setAttribute("cy", centerY);
+    ellipse.setAttribute("rx", radiusX);
+    ellipse.setAttribute("ry", radiusY);
+    ellipse.setAttribute("stroke", "black");
+    ellipse.setAttribute("fill", "transparent");
+    this.svgCanvas.appendChild(ellipse);
+    return ellipse;
+  }
+  // More creation methods for other shapes can go here...
+}
+```
+
+#### 3. `CanvasItem.js`
+
+```javascript
+import ObjectDrawing from "./ObjectDrawing.js";
+import SvgObject from "./SvgObject.js";
+
+export default class CanvasItem {
+  constructor(ctx, svgCanvas) {
+    this.drawing = new ObjectDrawing(ctx);
+    this.svgObject = new SvgObject(svgCanvas);
+  }
+}
+```
+
+#### 4. Shape Classes (`Rectangle.js`, `Ellipse.js`, `Triangle.js`, `Actor.js`)
+
+##### `Rectangle.js`
+
+```javascript
+import CanvasItem from "./CanvasItem.js";
+
+export default class Rectangle extends CanvasItem {
+  constructor(ctx, svgCanvas) {
+    super(ctx, svgCanvas);
+  }
+
+  drawPreview(startX, startY, currentX, currentY) {
+    this.drawing.drawRectangle(startX, startY, currentX, currentY);
+  }
+
+  createFinal(startX, startY, currentX, currentY) {
+    return this.svgObject.createSvgRectangle(
+      startX,
+      startY,
+      currentX,
+      currentY
+    );
+  }
+}
+```
+
+##### `Ellipse.js`
+
+```javascript
+import CanvasItem from "./CanvasItem.js";
+
+export default class Ellipse extends CanvasItem {
+  constructor(ctx, svgCanvas) {
+    super(ctx, svgCanvas);
+  }
+
+  drawPreview(startX, startY, currentX, currentY) {
+    this.drawing.drawEllipse(startX, startY, currentX, currentY);
+  }
+
+  createFinal(startX, startY, currentX, currentY) {
+    return this.svgObject.createSvgEllipse(startX, startY, currentX, currentY);
+  }
+}
+```
+
+### Summary of Changes
+
+- **Refactor into Classes**: We split logic into different classes and placed them in individual files for better modularity.
+- **Unified `CanvasItem` Class**: Combines the `ObjectDrawing` and `SvgObject` classes.
+- **Shape-Specific Classes**: Inherit from `CanvasItem` for specific drawing and creation behavior (e.g., `Rectangle`, `Ellipse`).
+- **New File Structure**: Each shape now has its own file, making it easier to manage and expand functionality.
+
+This approach will make development more manageable, enable easier debugging, and facilitate extensions in the future. Let me know if you need specific code details or further customization!
