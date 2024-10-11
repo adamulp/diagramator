@@ -41,8 +41,6 @@ html, body
     height: 100%
     background: transparent
     z-index: 1
-    &.disabled
-      pointer-events: none // Prevent canvas from blocking interaction when disabled
 
   svg#diagramSvg
     position: absolute
@@ -52,12 +50,13 @@ html, body
     height: 100%
     z-index: 0
 
-.actor circle 
+.actor
+  circle 
     stroke-width: 2px
 
-.actor line
+  line
     stroke-width: 2px
 
-.actor text
+  text
     font-family: Arial, sans-serif
     fill: black

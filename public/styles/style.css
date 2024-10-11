@@ -45,9 +45,6 @@ html, body {
   background: transparent;
   z-index: 1;
 }
-.canvas-wrapper canvas#tempCanvas.disabled {
-  pointer-events: none;
-}
 .canvas-wrapper svg#diagramSvg {
   position: absolute;
   top: 0;
@@ -60,11 +57,9 @@ html, body {
 .actor circle {
   stroke-width: 2px;
 }
-
 .actor line {
   stroke-width: 2px;
 }
-
 .actor text {
   font-family: Arial, sans-serif;
   fill: black;

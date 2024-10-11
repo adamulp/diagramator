@@ -11,18 +11,18 @@ Let's take a fresh approach by refactoring the project into a more maintainable,
 ├── package.json
 ├── public
 │   ├── js
-│   │   ├── main.js                 # Main entry point handling events, setup, etc.
-│   │   ├── canvas                  # Modularized canvas components
-│   │   │   ├── CanvasItem.js       # Base class for drawable items
-│   │   │   ├── Shape.js            # General shape-handling utilities (base class)
-│   │   │   ├── Rectangle.js        # Rectangle shape logic
-│   │   │   ├── Ellipse.js          # Ellipse shape logic
-│   │   │   ├── Triangle.js         # Triangle shape logic
-│   │   │   └── Actor.js            # Actor-specific shape logic
+│   │   ├── diagram.js
+│   │   ├── canvas
+│   │   │   ├── CanvasItem.js
+│   │   │   ├── Shape.js
+│   │   │   ├── Rectangle.js
+│   │   │   ├── Ellipse.js
+│   │   │   ├── Triangle.js
+│   │   │   └── Actor.js
 │   │   └── utils
-│   │       └── SvgUtils.js         # SVG utility functions for creating/modifying SVGs
+│   │       └── SvgUtils.js
 │   └── styles
-│       └── style.sass              # Main SASS styles
+│       └── style.sass
 └── views
     ├── index.pug
     └── tools.pug
@@ -241,152 +241,15 @@ export default class Actor extends CanvasItem {
 ```javascript
 // SvgUtils.js
 export function createSvgElement(type, attributes) {
-    const element = document.createElementNS('http://www.w3.org/2000/svg', type);
-    Object.keys(attributes).forEach((key) => {
-        element.setAttribute(key, attributes[key]);
-    });
-    return element;
+  const element = document.createElementNS("http://www.w3.org/2000/svg", type);
+  Object.keys(attributes).forEach((key) => {
+    element.setAttribute(key, attributes[key]);
+  });
+  return element;
 }
 
 export function appendSvgElement(svgCanvas, element) {
-    svgCanvas.appendChild(element);
-}
-
-import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-
-export default class Rectangle extends CanvasItem {
-    constructor(ctx, svgCanvas) {
-        super(ctx, svgCanvas);
-    }
-
-    drawPreview(currentX, currentY) {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        const width = currentX - this.startX;
-        const height = currentY - this.startY;
-        this.ctx.strokeStyle = 'black';
-        this.ctx.strokeRect(this.startX, this.startY, width, height);
-    }
-
-    createFinal(currentX, currentY) {
-        const attributes = {
-            x: Math.min(this.startX, currentX),
-            y: Math.min(this.startY, currentY),
-            width: Math.abs(currentX - this.startX),
-            height: Math.abs(currentY - this.startY),
-            stroke: 'black',
-            fill: 'transparent'
-        };
-        const rect = createSvgElement('rect', attributes);
-        appendSvgElement(this.svgCanvas, rect);
-    }
-}
-
-import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-
-export default class Ellipse extends CanvasItem {
-    constructor(ctx, svgCanvas) {
-        super(ctx, svgCanvas);
-    }
-
-    drawPreview(currentX, currentY) {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        const radiusX = Math.abs(currentX - this.startX) / 2;
-        const radiusY = Math.abs(currentY - this.startY) / 2;
-        const centerX = (currentX + this.startX) / 2;
-        const centerY = (currentY + this.startY) / 2;
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
-        this.ctx.strokeStyle = 'black';
-        this.ctx.stroke();
-    }
-
-    createFinal(currentX, currentY) {
-        const attributes = {
-            cx: (currentX + this.startX) / 2,
-            cy: (currentY + this.startY) / 2,
-            rx: Math.abs(currentX - this.startX) / 2,
-            ry: Math.abs(currentY - this.startY) / 2,
-            stroke: 'black',
-            fill: 'transparent'
-        };
-        const ellipse = createSvgElement('ellipse', attributes);
-        appendSvgElement(this.svgCanvas, ellipse);
-    }
-}
-import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-
-export default class Triangle extends CanvasItem {
-    constructor(ctx, svgCanvas) {
-        super(ctx, svgCanvas);
-    }
-
-    drawPreview(currentX, currentY) {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.startX, this.startY);
-        this.ctx.lineTo(currentX, currentY);
-        this.ctx.lineTo(this.startX - (currentX - this.startX), currentY);
-        this.ctx.closePath();
-        this.ctx.strokeStyle = 'black';
-        this.ctx.stroke();
-    }
-
-    createFinal(currentX, currentY) {
-        const points = `${this.startX},${this.startY} ${currentX},${currentY} ${this.startX - (currentX - this.startX)},${currentY}`;
-        const attributes = {
-            points: points,
-            stroke: 'black',
-            fill: 'transparent'
-        };
-        const polygon = createSvgElement('polygon', attributes);
-        appendSvgElement(this.svgCanvas, polygon);
-    }
-}
-import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-
-export default class Actor extends CanvasItem {
-    constructor(ctx, svgCanvas) {
-        super(ctx, svgCanvas);
-    }
-
-    createFinal(x, y) {
-        const actorGroup = createSvgElement('g', {
-            class: 'actor',
-            transform: `translate(${x}, ${y})`,
-            stroke: 'black',
-            fill: 'transparent'
-        });
-
-        // Head
-        const head = createSvgElement('circle', {
-            cx: '0',
-            cy: '-30',
-            r: '15',
-            stroke: 'black',
-            fill: 'white'
-        });
-
-        // Body
-        const body = createSvgElement('line', {
-            x1: '0',
-            y1: '-15',
-            x2: '0',
-            y2: '20',
-            stroke: 'black'
-        });
-
-        // Append elements to actor group
-        appendSvgElement(actorGroup, head);
-        appendSvgElement(actorGroup, body);
-
-        // Arms and legs can be added similarly...
-
-        appendSvgElement(this.svgCanvas, actorGroup);
-    }
+  svgCanvas.appendChild(element);
 }
 ```
 
@@ -394,4 +257,4 @@ export default class Actor extends CanvasItem {
 
 - **Refactor into Classes**: We split logic into different classes and placed them in individual files for better modularity.
 - **Unified `CanvasItem` Class**: Combines the drawing logic for canvas previews and the creation of SVG elements.
-- **Shape-Specific Classes**: `Rectangle`, `Ellipse`, `Triangle`, and `Actor`
+- **Shape-Specific Classes**: `Rectangle`, `Ellipse`, `Triangle`, and `Actor` each handle specific behaviors while reusing common functionality through inheritance.
