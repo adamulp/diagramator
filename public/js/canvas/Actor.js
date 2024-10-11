@@ -33,12 +33,64 @@ export default class Actor extends CanvasItem {
             stroke: 'black'
         });
 
+        // TO DO: Add arms and legs similarly...
+        const leftArm = createSvgElement('line', {
+            x1: '0',
+            y1: '-15',
+            x2: '-20',
+            y2: '0',
+            stroke: 'black'
+        });
+
+        const rightArm = createSvgElement('line', {
+            x1: '0',
+            y1: '-15',
+            x2: '20',
+            y2: '0',
+            stroke: 'black'
+        });
+
+        const leftLeg = createSvgElement('line', {
+            x1: '0',
+            y1: '20',
+            x2: '-15',
+            y2: '40',
+            stroke: 'black'
+        });
+
+        const rightLeg = createSvgElement('line', {
+            x1: '0',
+            y1: '20',
+            x2: '15',
+            y2: '40',
+            stroke: 'black'
+        });
+
         // Append elements to actor group
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
+        appendSvgElement(actorGroup, leftArm);
+        appendSvgElement(actorGroup, rightArm);
+        appendSvgElement(actorGroup, leftLeg);
+        appendSvgElement(actorGroup, rightLeg);
 
-        // TO DO: Add arms and legs similarly...
+        // Add Label
+        const label = createSvgElement('text', {
+            x: '0',
+            y: '60',
+            'text-anchor': 'middle',
+            stroke: 'black',
+            fill: 'black'
+        });
+        label.textContent = 'Actor';
+        appendSvgElement(actorGroup, label);
 
+
+        // Add event listener for selection
+        actorGroup.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            selectElement(actorGroup);
+        });
         appendSvgElement(this.svgCanvas, actorGroup);
     }
 }
