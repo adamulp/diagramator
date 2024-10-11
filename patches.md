@@ -236,26 +236,29 @@ export default class Actor extends CanvasItem {
 }
 ```
 
+##### `SvgUtils.js`
+
+```javascript
 // SvgUtils.js
 export function createSvgElement(type, attributes) {
-const element = document.createElementNS('http://www.w3.org/2000/svg', type);
-Object.keys(attributes).forEach((key) => {
-element.setAttribute(key, attributes[key]);
-});
-return element;
+    const element = document.createElementNS('http://www.w3.org/2000/svg', type);
+    Object.keys(attributes).forEach((key) => {
+        element.setAttribute(key, attributes[key]);
+    });
+    return element;
 }
 
 export function appendSvgElement(svgCanvas, element) {
-svgCanvas.appendChild(element);
+    svgCanvas.appendChild(element);
 }
 
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 
 export default class Rectangle extends CanvasItem {
-constructor(ctx, svgCanvas) {
-super(ctx, svgCanvas);
-}
+    constructor(ctx, svgCanvas) {
+        super(ctx, svgCanvas);
+    }
 
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -277,16 +280,15 @@ super(ctx, svgCanvas);
         const rect = createSvgElement('rect', attributes);
         appendSvgElement(this.svgCanvas, rect);
     }
-
 }
 
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 
 export default class Ellipse extends CanvasItem {
-constructor(ctx, svgCanvas) {
-super(ctx, svgCanvas);
-}
+    constructor(ctx, svgCanvas) {
+        super(ctx, svgCanvas);
+    }
 
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -312,15 +314,14 @@ super(ctx, svgCanvas);
         const ellipse = createSvgElement('ellipse', attributes);
         appendSvgElement(this.svgCanvas, ellipse);
     }
-
 }
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 
 export default class Triangle extends CanvasItem {
-constructor(ctx, svgCanvas) {
-super(ctx, svgCanvas);
-}
+    constructor(ctx, svgCanvas) {
+        super(ctx, svgCanvas);
+    }
 
     drawPreview(currentX, currentY) {
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -343,15 +344,14 @@ super(ctx, svgCanvas);
         const polygon = createSvgElement('polygon', attributes);
         appendSvgElement(this.svgCanvas, polygon);
     }
-
 }
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 
 export default class Actor extends CanvasItem {
-constructor(ctx, svgCanvas) {
-super(ctx, svgCanvas);
-}
+    constructor(ctx, svgCanvas) {
+        super(ctx, svgCanvas);
+    }
 
     createFinal(x, y) {
         const actorGroup = createSvgElement('g', {
@@ -387,11 +387,11 @@ super(ctx, svgCanvas);
 
         appendSvgElement(this.svgCanvas, actorGroup);
     }
-
 }
 
-### Summary of Changes
 
+### Summary of Changes
 - **Refactor into Classes**: We split logic into different classes and placed them in individual files for better modularity.
 - **Unified `CanvasItem` Class**: Combines the drawing logic for canvas previews and the creation of SVG elements.
 - **Shape-Specific Classes**: `Rectangle`, `Ellipse`, `Triangle`, and `Actor`
+```
