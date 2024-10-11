@@ -4,6 +4,16 @@ import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 export default class Ellipse extends Shape {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
+        this.previewElement = null; // Store the preview element    
+        this.startX = 0;
+        this.startY = 0;
+
+    }
+
+    // Method to set the starting coordinates
+    setStartCoords(x, y) {
+        this.startX = x;
+        this.startY = y;
     }
 
     // Override to calculate ellipse-specific dimensions
@@ -18,9 +28,28 @@ export default class Ellipse extends Shape {
 
     // Override to draw an ellipse preview
     drawShapePreview(centerX, centerY, radiusX, radiusY) {
-        this.ctx.beginPath();
-        this.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
-        this.ctx.stroke();
+        const x = centerX - radiusX;
+        const y = centerY - radiusY;
+        const width = radiusX * 2;
+        const height = radiusY * 2;
+
+        // Create or update the preview element
+        if (!this.previewElement) {
+            this.previewElement = createSvgElement('ellipse', {
+                cx: centerX,
+                cy: centerY,
+                rx: radiusX,
+                ry: radiusY,
+                stroke: 'black',
+                fill: 'transparent'
+            });
+            appendSvgElement(this.svgCanvas, this.previewElement);
+        } else {
+            this.previewElement.setAttribute('cx', centerX);
+            this.previewElement.setAttribute('cy', centerY);
+            this.previewElement.setAttribute('rx', radiusX);
+            this.previewElement.setAttribute('ry', radiusY);
+        }
     }
 
     // Implement the createFinal method
@@ -44,5 +73,11 @@ export default class Ellipse extends Shape {
 
         // Append the ellipse to the SVG canvas
         appendSvgElement(this.svgCanvas, ellipse);
+
+        // Remove the preview element after finalizing
+        if (this.previewElement) {
+            this.previewElement.remove();
+            this.previewElement = null;
+        }
     }
 }

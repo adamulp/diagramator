@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 default:
                     selectedTool = null;
             }
-            console.log(`Selected tool: ${toolName}`);
         });
     });
 
@@ -46,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
             startX = e.clientX - rect.left;
             startY = e.clientY - rect.top;
             selectedTool.setStartCoords(startX, startY);
-            console.log(`Mouse Down: startX=${startX}, startY=${startY}`);
         }
     });
 
@@ -57,10 +55,12 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
             ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear temp canvas
-            const { startX, startY, width, height } = selectedTool.getDimensions(currentX, currentY); // Get dimensions
-            selectedTool.drawShapePreview(startX, startY, width, height); // Use tool's preview method
+            
+            // Directly pass startX, startY, currentX, currentY to drawShapePreview
+            selectedTool.drawShapePreview(startX, startY, currentX, currentY);
         }
     });
+    
 
     // Finalize the shape on mouse up
     tempCanvas.addEventListener('mouseup', (e) => {
