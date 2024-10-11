@@ -7,6 +7,7 @@ export default class Rectangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Draw a preview of the rectangle on the temporary canvas.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const width = currentX - this.startX;
         const height = currentY - this.startY;
@@ -15,6 +16,7 @@ export default class Rectangle extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Create the final SVG rectangle and append it to the SVG canvas.
         const attributes = {
             x: Math.min(this.startX, currentX),
             y: Math.min(this.startY, currentY),

@@ -1,6 +1,7 @@
 import os
 
 
+# TO DO: Create the directory structure and ensure all the necessary folders exist.
 def create_directory_structure():
     """Creates the directory structure for the project."""
     os.makedirs('canvas', exist_ok=True)
@@ -21,6 +22,7 @@ def create_directory_structure():
         with open(file, 'w') as f:
             pass
 
+# TO DO: Write utility functions to create and append SVG elements
 def write_svg_utils():
     """Writes content to SvgUtils.js."""
     content = """
@@ -39,7 +41,7 @@ export function appendSvgElement(svgCanvas, element) {
     with open('utils/SvgUtils.js', 'w') as f:
         f.write(content.strip())
 
-
+# TO DO: Write the base CanvasItem class to be used for other shapes
 def write_canvas_item():
     """Writes content to CanvasItem.js."""
     content = """
@@ -60,6 +62,7 @@ export default class CanvasItem {
     with open('canvas/CanvasItem.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Define the Rectangle class, inheriting from CanvasItem
 def write_rectangle():
     """Writes content to Rectangle.js."""
     content = """
@@ -72,6 +75,7 @@ export default class Rectangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Draw a preview of the rectangle on the temporary canvas.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const width = currentX - this.startX;
         const height = currentY - this.startY;
@@ -80,6 +84,7 @@ export default class Rectangle extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Create the final SVG rectangle and append it to the SVG canvas.
         const attributes = {
             x: Math.min(this.startX, currentX),
             y: Math.min(this.startY, currentY),
@@ -96,6 +101,7 @@ export default class Rectangle extends CanvasItem {
     with open('canvas/Rectangle.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Define the Ellipse class, inheriting from CanvasItem
 def write_ellipse():
     """Writes content to Ellipse.js."""
     content = """
@@ -108,6 +114,7 @@ export default class Ellipse extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Draw a preview of the ellipse on the temporary canvas.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const radiusX = Math.abs(currentX - this.startX) / 2;
         const radiusY = Math.abs(currentY - this.startY) / 2;
@@ -120,6 +127,7 @@ export default class Ellipse extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Create the final SVG ellipse and append it to the SVG canvas.
         const attributes = {
             cx: (currentX + this.startX) / 2,
             cy: (currentY + this.startY) / 2,
@@ -136,6 +144,7 @@ export default class Ellipse extends CanvasItem {
     with open('canvas/Ellipse.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Define the Actor class, inheriting from CanvasItem
 def write_actor():
     """Writes content to Actor.js."""
     content = """
@@ -148,6 +157,7 @@ export default class Actor extends CanvasItem {
     }
 
     createFinal(x, y) {
+        // TO DO: Create the actor SVG group, including head, body, arms, and legs.
         const actorGroup = createSvgElement('g', {
             class: 'actor',
             transform: `translate(${x}, ${y})`,
@@ -155,7 +165,7 @@ export default class Actor extends CanvasItem {
             fill: 'transparent'
         });
 
-        // Head
+        // TO DO: Add the head to the actor group.
         const head = createSvgElement('circle', {
             cx: '0',
             cy: '-30',
@@ -164,7 +174,7 @@ export default class Actor extends CanvasItem {
             fill: 'white'
         });
 
-        // Body
+        // TO DO: Add the body to the actor group.
         const body = createSvgElement('line', {
             x1: '0',
             y1: '-15',
@@ -177,7 +187,7 @@ export default class Actor extends CanvasItem {
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
 
-        // Arms and legs can be added similarly...
+        // TO DO: Add arms and legs similarly...
 
         appendSvgElement(this.svgCanvas, actorGroup);
     }
@@ -186,6 +196,7 @@ export default class Actor extends CanvasItem {
     with open('canvas/Actor.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Fill out the full implementation of write_triangle function.
 def write_triangle():
     """Writes content to Triangle.js."""
     content = """
@@ -198,6 +209,7 @@ export default class Triangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Implement the method to draw a preview of a triangle.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.beginPath();
         this.ctx.moveTo(this.startX, currentY); // Left point
@@ -209,6 +221,7 @@ export default class Triangle extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Implement the method to create the final SVG triangle.
         const points = `${this.startX},${this.startY} ${currentX},${currentY} ${this.startX - (currentX - this.startX)},${currentY}`;
         const attributes = {
             points: points,
@@ -223,6 +236,7 @@ export default class Triangle extends CanvasItem {
     with open('canvas/Triangle.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Consider adding common methods for shapes that might be shared across multiple shape types.
 def write_shape():
     """Writes content to Shape.js."""
     content = """
@@ -239,6 +253,7 @@ export default class Shape extends CanvasItem {
     with open('canvas/Shape.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Add event handlers for all types of tools and shapes in diagram.js.
 def write_diagram():
     """Writes content to diagram.js."""
     content = """
@@ -258,6 +273,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let startX = 0;
     let startY = 0;
 
+    // TO DO: Add more tools to the tool selection logic.
     // Tool selection logic
     document.querySelectorAll('.tool-icon').forEach((icon) => {
         icon.addEventListener('click', (e) => {
@@ -284,6 +300,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // TO DO: Update mouse event handlers to include all possible interactions.
     // Event handlers for canvas drawing actions
     tempCanvas.addEventListener('mousedown', (e) => {
         if (selectedTool) {
@@ -301,7 +318,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            selectedTool.drawPreview(currentX, currentY);
+            selectedTool.drawPreview(currentX, currentY); // TO DO: Ensure drawPreview is correctly implemented for all shapes.
             console.log(`Mouse Move: currentX=${currentX}, currentY=${currentY}`);
         }
     });
@@ -311,7 +328,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            selectedTool.createFinal(currentX, currentY);
+            selectedTool.createFinal(currentX, currentY); // TO DO: Ensure createFinal is working correctly for all shapes.
             isDrawing = false;
             console.log(`Mouse Up: currentX=${currentX}, currentY=${currentY}`);
         }
@@ -321,6 +338,7 @@ document.addEventListener('DOMContentLoaded', function () {
     with open('diagram.js', 'w') as f:
         f.write(content.strip())
 
+# TO DO: Add logic for missing shape classes and their unique properties.
 def main():
     create_directory_structure()
     write_svg_utils()

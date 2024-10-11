@@ -7,6 +7,7 @@ export default class Actor extends CanvasItem {
     }
 
     createFinal(x, y) {
+        // TO DO: Create the actor SVG group, including head, body, arms, and legs.
         const actorGroup = createSvgElement('g', {
             class: 'actor',
             transform: `translate(${x}, ${y})`,
@@ -14,7 +15,7 @@ export default class Actor extends CanvasItem {
             fill: 'transparent'
         });
 
-        // Head
+        // TO DO: Add the head to the actor group.
         const head = createSvgElement('circle', {
             cx: '0',
             cy: '-30',
@@ -23,7 +24,7 @@ export default class Actor extends CanvasItem {
             fill: 'white'
         });
 
-        // Body
+        // TO DO: Add the body to the actor group.
         const body = createSvgElement('line', {
             x1: '0',
             y1: '-15',
@@ -36,7 +37,7 @@ export default class Actor extends CanvasItem {
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
 
-        // Arms and legs can be added similarly...
+        // TO DO: Add arms and legs similarly...
 
         appendSvgElement(this.svgCanvas, actorGroup);
     }

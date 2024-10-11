@@ -7,6 +7,7 @@ export default class Ellipse extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Draw a preview of the ellipse on the temporary canvas.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const radiusX = Math.abs(currentX - this.startX) / 2;
         const radiusY = Math.abs(currentY - this.startY) / 2;
@@ -19,6 +20,7 @@ export default class Ellipse extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Create the final SVG ellipse and append it to the SVG canvas.
         const attributes = {
             cx: (currentX + this.startX) / 2,
             cy: (currentY + this.startY) / 2,

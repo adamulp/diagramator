@@ -14,6 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     let startX = 0;
     let startY = 0;
 
+    // TO DO: Add more tools to the tool selection logic.
     // Tool selection logic
     document.querySelectorAll('.tool-icon').forEach((icon) => {
         icon.addEventListener('click', (e) => {
@@ -40,6 +41,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // TO DO: Update mouse event handlers to include all possible interactions.
     // Event handlers for canvas drawing actions
     tempCanvas.addEventListener('mousedown', (e) => {
         if (selectedTool) {
@@ -57,7 +59,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            selectedTool.drawPreview(currentX, currentY);
+            selectedTool.drawPreview(currentX, currentY); // TO DO: Ensure drawPreview is correctly implemented for all shapes.
             console.log(`Mouse Move: currentX=${currentX}, currentY=${currentY}`);
         }
     });
@@ -67,7 +69,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            selectedTool.createFinal(currentX, currentY);
+            selectedTool.createFinal(currentX, currentY); // TO DO: Ensure createFinal is working correctly for all shapes.
             isDrawing = false;
             console.log(`Mouse Up: currentX=${currentX}, currentY=${currentY}`);
         }

@@ -7,6 +7,7 @@ export default class Triangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
+        // TO DO: Implement the method to draw a preview of a triangle.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         this.ctx.beginPath();
         this.ctx.moveTo(this.startX, currentY); // Left point
@@ -18,6 +19,7 @@ export default class Triangle extends CanvasItem {
     }
 
     createFinal(currentX, currentY) {
+        // TO DO: Implement the method to create the final SVG triangle.
         const points = `${this.startX},${this.startY} ${currentX},${currentY} ${this.startX - (currentX - this.startX)},${currentY}`;
         const attributes = {
             points: points,
