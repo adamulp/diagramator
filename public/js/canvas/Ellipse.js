@@ -30,6 +30,12 @@ export default class Ellipse extends CanvasItem {
             fill: 'transparent'
         };
         const ellipse = createSvgElement('ellipse', attributes);
+
+        // Add event listener for selection
+        ellipse.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            selectElement(ellipse);
+        });
         appendSvgElement(this.svgCanvas, ellipse);
     }
 }

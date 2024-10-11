@@ -27,6 +27,11 @@ export default class Triangle extends CanvasItem {
             fill: 'transparent'
         };
         const polygon = createSvgElement('polygon', attributes);
+        // Add event listener for selection
+        polygon.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            selectElement(polygon);
+        });
         appendSvgElement(this.svgCanvas, polygon);
     }
 }

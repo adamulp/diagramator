@@ -26,6 +26,11 @@ export default class Rectangle extends CanvasItem {
             fill: 'transparent'
         };
         const rect = createSvgElement('rect', attributes);
+        // Add event listener for selection
+        rect.addEventListener('click', function(e) {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            selectElement(rect);
+        });
         appendSvgElement(this.svgCanvas, rect);
     }
 }

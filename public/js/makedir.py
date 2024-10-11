@@ -22,9 +22,9 @@ def create_directory_structure():
         with open(file, 'w') as f:
             pass
 
-# TO DO: Write utility functions to create and append SVG elements
-def write_svg_utils():
-    """Writes content to SvgUtils.js."""
+# Update SvgUtils.js to include the selectElement function
+def update_svg_utils():
+    """Updates SvgUtils.js to include selection capabilities."""
     content = """
 export function createSvgElement(type, attributes) {
     const element = document.createElementNS('http://www.w3.org/2000/svg', type);
@@ -37,10 +37,19 @@ export function createSvgElement(type, attributes) {
 export function appendSvgElement(svgCanvas, element) {
     svgCanvas.appendChild(element);
 }
+
+// Function to handle selecting an element
+export function selectElement(element) {
+    // Set all elements to default state
+    const svgElements = document.querySelectorAll('#diagramSvg > *');
+    svgElements.forEach(el => el.setAttribute('stroke', 'black'));
+
+    // Highlight selected element
+    element.setAttribute('stroke', 'blue');
+}
 """
     with open('utils/SvgUtils.js', 'w') as f:
         f.write(content.strip())
-
 # TO DO: Write the base CanvasItem class to be used for other shapes
 def write_canvas_item():
     """Writes content to CanvasItem.js."""
@@ -340,15 +349,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 # TO DO: Add logic for missing shape classes and their unique properties.
 def main():
-    create_directory_structure()
-    write_svg_utils()
-    write_canvas_item()
-    write_rectangle()
-    write_ellipse()
-    write_actor()
-    write_triangle()
-    write_shape()
-    write_diagram()
+    update_svg_utils()
 
 if __name__ == "__main__":
     main()
