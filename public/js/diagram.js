@@ -106,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedItem = null;
                 }
             } else if (selectedTool) {
+                console.log('Tool is selected');
                 // Logic for other tools
                 selectedTool.createFinal(currentX, currentY); // Add shape to svgCanvas
             }

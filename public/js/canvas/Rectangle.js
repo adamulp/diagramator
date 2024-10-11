@@ -54,6 +54,7 @@ export default class Rectangle extends Shape {
         }
     }
     createFinal(currentX, currentY) {
+        console.log('Creating final rectangle');
         const width = currentX - this.startX;
         const height = currentY - this.startY;
         const rect = createSvgElement('rect', {
@@ -64,7 +65,7 @@ export default class Rectangle extends Shape {
         });
         
         // Create a group for the rectangle and add it to the svgCanvas
-        const rectGroup = createSvgGroup(
+        const rectGroup = createSvgElement('g',
             {
                 stroke: 'black',
                 fill: 'transparent'
