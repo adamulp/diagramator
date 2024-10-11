@@ -4,8 +4,12 @@ import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 export default class Triangle extends CanvasItem {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
+        this.startX = 0;
+        this.startY = 0;
+        // Add an attribute to check if the class being drawn has a preview method
+        this.hasPreview = true;
     }
-
+    
     drawPreview(currentX, currentY) {
         // TO DO: Implement the method to draw a preview of a triangle.
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
@@ -27,11 +31,7 @@ export default class Triangle extends CanvasItem {
             fill: 'transparent'
         };
         const polygon = createSvgElement('polygon', attributes);
-        // Add event listener for selection
-        polygon.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent click event from reaching parent
-            selectElement(polygon);
-        });
+
         appendSvgElement(this.svgCanvas, polygon);
     }
 }

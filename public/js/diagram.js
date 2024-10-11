@@ -55,11 +55,12 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     tempCanvas.addEventListener('mousemove', (e) => {
-        if (isDrawing && selectedTool) {
+        if (isDrawing && selectedTool.hasPreview) {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            selectedTool.drawPreview(currentX, currentY); // TO DO: Ensure drawPreview is correctly implemented for all shapes.
+            ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear the canvas before drawing the preview
+            selectedTool.drawPreview(currentX, currentY);
             console.log(`Mouse Move: currentX=${currentX}, currentY=${currentY}`);
         }
     });

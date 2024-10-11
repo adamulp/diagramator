@@ -1,13 +1,13 @@
-import CanvasItem from './CanvasItem.js';
+import Shape from './Shape.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 
-export default class Rectangle extends CanvasItem {
+export default class Rectangle extends Shape {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
     }
 
     drawPreview(currentX, currentY) {
-        // TO DO: Draw a preview of the rectangle on the temporary canvas.
+        // TO DO: Draw a preview of the rectangle on the temporary canvas under the mouse cursor where the svg will
         this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
         const width = currentX - this.startX;
         const height = currentY - this.startY;
@@ -26,11 +26,7 @@ export default class Rectangle extends CanvasItem {
             fill: 'transparent'
         };
         const rect = createSvgElement('rect', attributes);
-        // Add event listener for selection
-        rect.addEventListener('click', function(e) {
-            e.stopPropagation(); // Prevent click event from reaching parent
-            selectElement(rect);
-        });
+
         appendSvgElement(this.svgCanvas, rect);
     }
 }
