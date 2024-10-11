@@ -1,5 +1,6 @@
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
+import { drawTriangle } from '../utils/draw.js';
 
 export default class Triangle extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -7,14 +8,7 @@ export default class Triangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        this.ctx.beginPath();
-        this.ctx.moveTo(this.startX, this.startY);
-        this.ctx.lineTo(currentX, currentY);
-        this.ctx.lineTo(this.startX - (currentX - this.startX), currentY);
-        this.ctx.closePath();
-        this.ctx.strokeStyle = 'black';
-        this.ctx.stroke();
+        drawTriangle(this.ctx, this.startX, this.startY, currentX, currentY);
     }
 
     createFinal(currentX, currentY) {

@@ -3,6 +3,8 @@ import Ellipse from './canvas/Ellipse.js';
 import Triangle from './canvas/Triangle.js';
 import Actor from './canvas/Actor.js';
 
+// diagram.js code with appropriate changes and imports
+
 document.addEventListener('DOMContentLoaded', function () {
     const tempCanvas = document.getElementById('tempCanvas');
     const svgCanvas = document.getElementById('diagramSvg');
