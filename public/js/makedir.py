@@ -1,5 +1,6 @@
 import os
 
+
 def create_directory_structure():
     """Creates the directory structure for the project."""
     os.makedirs('canvas', exist_ok=True)
@@ -13,7 +14,6 @@ def create_directory_structure():
         'canvas/Shape.js',
         'canvas/Triangle.js',
         'utils/SvgUtils.js',
-        'utils/draw.js',  # Added draw.js
         'diagram.js'
     ]
 
@@ -39,51 +39,6 @@ export function appendSvgElement(svgCanvas, element) {
     with open('utils/SvgUtils.js', 'w') as f:
         f.write(content.strip())
 
-def write_draw_utils():
-    """Writes content to draw.js."""
-    content = """
-// draw.js
-// Utility functions to draw previews on canvas or create SVG elements
-
-function drawRectangle(ctx, startX, startY, currentX, currentY) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const width = currentX - startX;
-    const height = currentY - startY;
-    ctx.strokeStyle = 'black';
-    ctx.strokeRect(startX, startY, width, height);
-}
-
-function drawEllipse(ctx, startX, startY, currentX, currentY) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    const radiusX = Math.abs(currentX - startX) / 2;
-    const radiusY = Math.abs(currentY - startY) / 2;
-    const centerX = (currentX + startX) / 2;
-    const centerY = (currentY + startY) / 2;
-    ctx.beginPath();
-    ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-}
-
-function drawTriangle(ctx, startX, startY, currentX, currentY) {
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-    ctx.beginPath();
-    ctx.moveTo(startX, currentY); // Left point
-    ctx.lineTo(currentX, currentY); // Right point
-    ctx.lineTo((startX + currentX) / 2, startY); // Top point
-    ctx.closePath();
-    ctx.strokeStyle = 'black';
-    ctx.stroke();
-}
-
-export {
-    drawRectangle,
-    drawEllipse,
-    drawTriangle
-};
-"""
-    with open('utils/draw.js', 'w') as f:
-        f.write(content.strip())
 
 def write_canvas_item():
     """Writes content to CanvasItem.js."""
@@ -110,7 +65,6 @@ def write_rectangle():
     content = """
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-import { drawRectangle } from '../utils/draw.js';
 
 export default class Rectangle extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -118,7 +72,11 @@ export default class Rectangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        drawRectangle(this.ctx, this.startX, this.startY, currentX, currentY);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        const width = currentX - this.startX;
+        const height = currentY - this.startY;
+        this.ctx.strokeStyle = 'black';
+        this.ctx.strokeRect(this.startX, this.startY, width, height);
     }
 
     createFinal(currentX, currentY) {
@@ -143,7 +101,6 @@ def write_ellipse():
     content = """
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-import { drawEllipse } from '../utils/draw.js';
 
 export default class Ellipse extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -151,7 +108,15 @@ export default class Ellipse extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        drawEllipse(this.ctx, this.startX, this.startY, currentX, currentY);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        const radiusX = Math.abs(currentX - this.startX) / 2;
+        const radiusY = Math.abs(currentY - this.startY) / 2;
+        const centerX = (currentX + this.startX) / 2;
+        const centerY = (currentY + this.startY) / 2;
+        this.ctx.beginPath();
+        this.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.stroke();
     }
 
     createFinal(currentX, currentY) {
@@ -226,7 +191,6 @@ def write_triangle():
     content = """
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-import { drawTriangle } from '../utils/draw.js';
 
 export default class Triangle extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -234,7 +198,14 @@ export default class Triangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        drawTriangle(this.ctx, this.startX, this.startY, currentX, currentY);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        this.ctx.beginPath();
+        this.ctx.moveTo(this.startX, currentY); // Left point
+        this.ctx.lineTo(currentX, currentY); // Right point
+        this.ctx.lineTo((this.startX + currentX) / 2, this.startY); // Top point
+        this.ctx.closePath();
+        this.ctx.strokeStyle = 'black';
+        this.ctx.stroke();
     }
 
     createFinal(currentX, currentY) {
@@ -353,7 +324,6 @@ document.addEventListener('DOMContentLoaded', function () {
 def main():
     create_directory_structure()
     write_svg_utils()
-    write_draw_utils()  # Added write_draw_utils
     write_canvas_item()
     write_rectangle()
     write_ellipse()
@@ -364,4 +334,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

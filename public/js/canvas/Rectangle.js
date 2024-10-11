@@ -1,6 +1,5 @@
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-import { drawRectangle } from '../utils/draw.js';
 
 export default class Rectangle extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -8,7 +7,11 @@ export default class Rectangle extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        drawRectangle(this.ctx, this.startX, this.startY, currentX, currentY);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        const width = currentX - this.startX;
+        const height = currentY - this.startY;
+        this.ctx.strokeStyle = 'black';
+        this.ctx.strokeRect(this.startX, this.startY, width, height);
     }
 
     createFinal(currentX, currentY) {

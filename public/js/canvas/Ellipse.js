@@ -1,6 +1,5 @@
 import CanvasItem from './CanvasItem.js';
 import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
-import { drawEllipse } from '../utils/draw.js';
 
 export default class Ellipse extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -8,7 +7,15 @@ export default class Ellipse extends CanvasItem {
     }
 
     drawPreview(currentX, currentY) {
-        drawEllipse(this.ctx, this.startX, this.startY, currentX, currentY);
+        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+        const radiusX = Math.abs(currentX - this.startX) / 2;
+        const radiusY = Math.abs(currentY - this.startY) / 2;
+        const centerX = (currentX + this.startX) / 2;
+        const centerY = (currentY + this.startY) / 2;
+        this.ctx.beginPath();
+        this.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
+        this.ctx.strokeStyle = 'black';
+        this.ctx.stroke();
     }
 
     createFinal(currentX, currentY) {
