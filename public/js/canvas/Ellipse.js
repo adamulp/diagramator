@@ -27,17 +27,17 @@ export default class Ellipse extends Shape {
     }
 
     // Override to draw an ellipse preview
-    drawShapePreview(centerX, centerY, radiusX, radiusY) {
-        const x = centerX - radiusX;
-        const y = centerY - radiusY;
-        const width = radiusX * 2;
-        const height = radiusY * 2;
-
-        // Create or update the preview element
+    drawShapePreview(startX, startY, currentX, currentY) {
+        const x = (startX + currentX) / 2; // Calculate the center X
+        const y = (startY + currentY) / 2; // Calculate the center Y
+        const radiusX = Math.abs(currentX - startX) / 2; // Calculate the X radius
+        const radiusY = Math.abs(currentY - startY) / 2; // Calculate the Y radius
+    
+        // Ensure the preview element exists or create it
         if (!this.previewElement) {
             this.previewElement = createSvgElement('ellipse', {
-                cx: centerX,
-                cy: centerY,
+                cx: x,
+                cy: y,
                 rx: radiusX,
                 ry: radiusY,
                 stroke: 'black',
@@ -45,12 +45,13 @@ export default class Ellipse extends Shape {
             });
             appendSvgElement(this.svgCanvas, this.previewElement);
         } else {
-            this.previewElement.setAttribute('cx', centerX);
-            this.previewElement.setAttribute('cy', centerY);
+            this.previewElement.setAttribute('cx', x);
+            this.previewElement.setAttribute('cy', y);
             this.previewElement.setAttribute('rx', radiusX);
             this.previewElement.setAttribute('ry', radiusY);
         }
     }
+    
 
     // Implement the createFinal method
     createFinal(currentX, currentY) {
