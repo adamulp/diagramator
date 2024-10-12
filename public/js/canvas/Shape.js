@@ -11,7 +11,7 @@ export default class Shape extends CanvasItem {
     }
 
     // Abstract method for drawing the shape (must be overridden by subclasses)
-    drawShapePreview(startX, startY, width, height) {
+    drawShape(startX, startY, width, height) {
         throw new Error('drawShapePreview() must be implemented by the shape subclass');
     }
 
@@ -32,10 +32,5 @@ export default class Shape extends CanvasItem {
 
         // Set the selected element's stroke to blue
         element.setAttribute('stroke', 'blue');
-    }
-
-    // Abstract method for finalizing the shape (must be overridden by subclasses)
-    createFinal(currentX, currentY) {
-        throw new Error('createFinal() must be implemented by the shape subclass');
     }
 }

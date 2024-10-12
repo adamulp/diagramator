@@ -31,7 +31,7 @@ export default class Triangle extends Shape {
     }
 
     // Override to draw a triangle preview
-    drawShapePreview(startX, startY, currentX, currentY) {
+    drawShape(startX, startY, currentX, currentY) {
         const { x1, y1, x2, y2, x3, y3 } = this.getDimensions(currentX, currentY);
 
         // Create or update the preview element

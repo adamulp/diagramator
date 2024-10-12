@@ -14,7 +14,7 @@ export default class Rectangle extends Shape {
         this.startY = y;
     }
 
-    // Override to calculate rectangle-specific dimensions
+    // Calculate dimensions of rectangles from current mouse position
     getDimensions(currentX, currentY) {
         return {
             startX: this.startX,
@@ -25,7 +25,7 @@ export default class Rectangle extends Shape {
     }
 
     // Override to draw a rectangle preview
-    drawShapePreview(startX, startY, currentX, currentY) {
+    drawShape(startX, startY, currentX, currentY) {
         const x = Math.min(startX, currentX);
         const y = Math.min(startY, currentY);
         const width = Math.abs(currentX - startX);

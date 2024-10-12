@@ -27,7 +27,7 @@ export default class Ellipse extends Shape {
     }
 
     // Override to draw an ellipse preview
-    drawShapePreview(startX, startY, currentX, currentY) {
+    drawShape(startX, startY, currentX, currentY) {
         const x = (startX + currentX) / 2; // Calculate the center X
         const y = (startY + currentY) / 2; // Calculate the center Y
         const radiusX = Math.abs(currentX - startX) / 2; // Calculate the X radius
