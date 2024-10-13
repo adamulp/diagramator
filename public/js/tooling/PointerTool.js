@@ -20,11 +20,13 @@ class PointerTool {
             console.log(`Checking item with bbox: ${JSON.stringify(bbox)}`);
             if (x >= bbox.x && x <= bbox.x + bbox.width && y >= bbox.y && y <= bbox.y + bbox.height) {
                 this.selectedItem = groupItem;
-                // log css id and class info of items under cursor
                 console.log('Item selected:', groupItem);
+                return groupItem;
             }
         }
-        return groupItems;
+        console.log('No item selected');
+        this.selectedItem = null;
+        return null;
     }
 
     moveItem(dx, dy) {

@@ -83,6 +83,5 @@ export default class Actor extends CanvasItem {
         this.svgGroup = actorGroup;
 
         appendSvgElement(this.svgCanvas, actorGroup);
-        this.addSelectionListener(actorGroup);
     }
 }

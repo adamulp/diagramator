@@ -5,8 +5,6 @@ import Ellipse from './canvas/Ellipse.js';
 import Triangle from './canvas/Triangle.js';
 import Actor from './canvas/Actor.js';
 import PointerTool from './tooling/PointerTool.js';
-// import { is } from 'express/lib/request.js';
-
 
 document.addEventListener('DOMContentLoaded', function () {
     const svgCanvas = document.getElementById('svgCanvas');
@@ -47,7 +45,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
-
     // Start drawing on mouse down
     svgCanvas.addEventListener('mousedown', (e) => {
         // Check if PointerTool is selected
@@ -58,11 +55,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
             if (!isMoving && selectedItem !== null) {
                 isMoving = true;
-                // Show console message that item has been selected
                 console.log('Item has been selected and is moving.');
             }
 
-            if(isMoving) {
+            if (isMoving) {
                 startX = offsetX;
                 startY = offsetY;
                 return;
@@ -80,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function () {
     // Draw preview on mouse move
     svgCanvas.addEventListener('mousemove', (e) => {
         if (isMoving) {
-            // Show console message that item is being moved
             console.log('Moving selected item');
             const { offsetX, offsetY } = e;
             const dx = offsetX - startX;
@@ -93,16 +88,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const rect = svgCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear temp canvas
-            
-            // Directly pass startX, startY, currentX, currentY to drawShapePreview
+            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height);
             selectedTool.drawShape(startX, startY, currentX, currentY);
         }
     });
 
     // Finalize the shape on mouse up
     svgCanvas.addEventListener('mouseup', (e) => {
-        
         if (isDrawing) {
             const rect = svgCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
@@ -111,7 +103,6 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selectedTool instanceof Shape) {
                 selectedTool.drawShape(startX, startY, currentX, currentY);
             } else if (selectedTool instanceof Actor) {
-                // log values for startX, startY, currentX, currentY in console
                 console.log(`startX=${startX}, startY=${startY}, currentX=${currentX}, currentY=${currentY}`);
                 selectedTool.drawActor(startX, startY);
                 selectedTool.svgGroup = null;
