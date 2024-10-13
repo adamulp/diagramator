@@ -51,34 +51,4 @@ export default class Ellipse extends Shape {
             this.previewElement.setAttribute('ry', radiusY);
         }
     }
-    
-
-    // Implement the createFinal method
-    createFinal(currentX, currentY) {
-        const radiusX = Math.abs(currentX - this.startX) / 2;
-        const radiusY = Math.abs(currentY - this.startY) / 2;
-        const centerX = (this.startX + currentX) / 2;
-        const centerY = (this.startY + currentY) / 2;
-
-        const attributes = {
-            cx: centerX,
-            cy: centerY,
-            rx: radiusX,
-            ry: radiusY,
-            stroke: 'black',
-            fill: 'transparent'
-        };
-
-        // Create an SVG ellipse element with the calculated attributes
-        const ellipse = createSvgElement('ellipse', attributes);
-
-        // Append the ellipse to the SVG canvas
-        appendSvgElement(this.svgCanvas, ellipse);
-
-        // Remove the preview element after finalizing
-        if (this.previewElement) {
-            this.previewElement.remove();
-            this.previewElement = null;
-        }
-    }
 }

@@ -53,30 +53,5 @@ export default class Rectangle extends Shape {
             this.previewElement.setAttribute('height', height);
         }
     }
-    createFinal(currentX, currentY) {
-        console.log('Creating final rectangle');
-        const width = currentX - this.startX;
-        const height = currentY - this.startY;
-        const rect = createSvgElement('rect', {
-            x: this.startX,
-            y: this.startY,
-            width: width,
-            height: height
-        });
-        
-        // Create a group for the rectangle and add it to the svgCanvas
-        const rectGroup = createSvgElement('g',
-            {
-                stroke: 'black',
-                fill: 'transparent'
-            }
-        );
-        rectGroup.appendChild(rect);
-        appendSvgElement(this.svgCanvas, rectGroup);
-        // Remove the preview element after finalizing
-        if (this.previewElement) {
-            this.svgCanvas.removeChild(this.previewElement);
-            this.previewElement = null;
-        }
-    }
+
 }

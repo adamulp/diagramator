@@ -3,6 +3,7 @@ import Ellipse from './canvas/Ellipse.js';
 import Triangle from './canvas/Triangle.js';
 import Actor from './canvas/Actor.js';
 import PointerTool from './tooling/PointerTool.js';
+import CanvasItem from './canvas/CanvasItem.js';
 
 document.addEventListener('DOMContentLoaded', function () {
     const tempCanvas = document.getElementById('tempCanvas');
@@ -57,7 +58,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.log('Item has been selected.');
                 return;
             }
-        } else if (selectedTool) {
+        } else if (selectedTool instanceof CanvasItem) {
             isDrawing = true;
             const rect = tempCanvas.getBoundingClientRect();
             startX = e.clientX - rect.left;
@@ -78,7 +79,6 @@ document.addEventListener('DOMContentLoaded', function () {
             startX = offsetX;
             startY = offsetY;
             ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear temp canvas  
-            return;
         }
         else if (isDrawing && selectedTool.hasPreview) {
             const rect = tempCanvas.getBoundingClientRect();
@@ -87,13 +87,13 @@ document.addEventListener('DOMContentLoaded', function () {
             ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear temp canvas
             
             // Directly pass startX, startY, currentX, currentY to drawShapePreview
-            selectedTool.drawShapePreview(startX, startY, currentX, currentY);
+            selectedTool.drawShape(startX, startY, currentX, currentY);
         }
     });
 
     // Finalize the shape on mouse up
     tempCanvas.addEventListener('mouseup', (e) => {
-        isDrawing = false;
+        
         if (isDrawing) {
             const rect = tempCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
@@ -105,13 +105,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedTool.finalizeMove();
                     selectedItem = null;
                 }
-            } else if (selectedTool) {
-                console.log('Tool is selected');
-                // Logic for other tools
+            } else if (selectedTool instanceof Actor) {
+                console.log('Actor to be created');
                 selectedTool.createFinal(currentX, currentY); // Add shape to svgCanvas
             }
 
             ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear preview
         }
+
+        isDrawing = false;
     });
 });

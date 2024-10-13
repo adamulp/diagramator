@@ -49,26 +49,4 @@ export default class Triangle extends Shape {
         }
     }
 
-    // Implement the createFinal method to create the triangle in the SVG canvas
-    createFinal(currentX, currentY) {
-        const { x1, y1, x2, y2, x3, y3 } = this.getDimensions(currentX, currentY);
-
-        // Create an SVG 'polygon' element for the triangle
-        const points = `${x1},${y1} ${x2},${y2} ${x3},${y3}`;
-        const attributes = {
-            points: points,
-            stroke: 'black',
-            fill: 'transparent'
-        };
-
-        // Create and append the polygon to the SVG canvas
-        const triangle = createSvgElement('polygon', attributes);
-        appendSvgElement(this.svgCanvas, triangle);
-
-        // Clean up the preview element
-        if (this.previewElement) {
-            this.svgCanvas.removeChild(this.previewElement);
-            this.previewElement = null;
-        }
-    }
 }
