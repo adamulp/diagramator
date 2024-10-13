@@ -5,6 +5,8 @@ export default class Shape extends CanvasItem {
         super(ctx, svgCanvas);
         this.hasPreview = true;
     }
+
+
     // Abstract method for getting dimensions (must be overridden by subclasses)
     getDimensions(currentX, currentY) {
         throw new Error('getDimensions() must be implemented by the shape subclass');
@@ -23,14 +25,11 @@ export default class Shape extends CanvasItem {
         });
     }
 
-    // Method to handle selecting an element
-    selectElement(element) {
-        // Set all elements to default stroke color
-        this.svgCanvas.childNodes.forEach((child) => {
-            child.setAttribute('stroke', 'black');
-        });
-
-        // Set the selected element's stroke to blue
-        element.setAttribute('stroke', 'blue');
+    // Method to remove the preview element
+    removePreviewElement() {
+        if (this.previewElement) {
+            this.previewElement.remove();
+            this.previewElement = null;
+        }
     }
 }

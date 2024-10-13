@@ -5,9 +5,6 @@ export default class Ellipse extends Shape {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
         this.previewElement = null; // Store the preview element    
-        this.startX = 0;
-        this.startY = 0;
-
     }
 
     // Method to set the starting coordinates

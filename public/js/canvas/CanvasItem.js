@@ -1,6 +1,6 @@
 export default class CanvasItem {
-    constructor(ctx, svgCanvas) {
-        this.ctx = ctx;
+    constructor(svgContext, svgCanvas) {
+        this.svgContext = svgContext;
         this.element = document.createElement('div');
         this.svgCanvas = svgCanvas;
         this.startX = 0;
@@ -18,7 +18,26 @@ export default class CanvasItem {
         this.element.classList.add('canvas-item');
     }
 
+    // Change ctx
+    setSvgcontext(svgContext) {
+        this.svgContext = svgContext;
+    }
+    
+    createSvgElement(elementType, attributes) {
+        const element = document.createElementNS('http://www.w3.org/2000/svg', elementType);
+        for (const key in attributes) {
+            element.setAttribute(key, attributes[key]);
+        }
+        return element;
+    }
 
+    createSvgGroup(attributes) {
+        return this.createSvgElement('g', attributes);
+    }
+
+    appendSvgElement(svgGroup, element) {
+        svgGroup.appendChild(element);
+    }
 
 
     // Method to handle selecting an element

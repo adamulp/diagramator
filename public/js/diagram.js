@@ -8,9 +8,9 @@ import PointerTool from './tooling/PointerTool.js';
 
 
 document.addEventListener('DOMContentLoaded', function () {
-    const tempCanvas = document.getElementById('tempCanvas');
-    const svgCanvas = document.getElementById('diagramSvg');
-    const ctx = tempCanvas.getContext('2d'); // Get 2D rendering context
+    const svgCanvas = document.getElementById('svgCanvas');
+    const svgLayer = document.getElementById('svgLayer');
+    const svgContext = svgCanvas.getContext('2d'); // Get 2D rendering context
     let selectedTool = null;
     let isDrawing = false;
     let startX = 0;
@@ -25,19 +25,19 @@ document.addEventListener('DOMContentLoaded', function () {
             // Set the selected tool
             switch (toolName) {
                 case 'Pointer Tool':
-                    selectedTool = new PointerTool(ctx, svgCanvas);
+                    selectedTool = new PointerTool(svgContext, svgLayer);
                     break;
                 case 'Rectangle Tool':
-                    selectedTool = new Rectangle(ctx, svgCanvas);
+                    selectedTool = new Rectangle(svgContext, svgLayer);
                     break;
                 case 'Ellipse Tool':
-                    selectedTool = new Ellipse(ctx, svgCanvas);
+                    selectedTool = new Ellipse(svgContext, svgLayer);
                     break;
                 case 'Triangle Tool':
-                    selectedTool = new Triangle(ctx, svgCanvas);
+                    selectedTool = new Triangle(svgContext, svgLayer);
                     break;
                 case 'Actor Tool':
-                    selectedTool = new Actor(ctx, svgCanvas);
+                    selectedTool = new Actor(svgContext, svgLayer);
                     break;
                 default:
                     selectedTool = null;
@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Start drawing on mouse down
-    tempCanvas.addEventListener('mousedown', (e) => {
+    svgCanvas.addEventListener('mousedown', (e) => {
         // Check if PointerTool is selected
         if (selectedTool instanceof PointerTool) {
             const { offsetX, offsetY } = e;
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         } else if (selectedTool instanceof CanvasItem) {
             isDrawing = true;
-            const rect = tempCanvas.getBoundingClientRect();
+            const rect = svgCanvas.getBoundingClientRect();
             startX = e.clientX - rect.left;
             startY = e.clientY - rect.top;
             selectedTool.setStartCoords(startX, startY);
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Draw preview on mouse move
-    tempCanvas.addEventListener('mousemove', (e) => {
+    svgCanvas.addEventListener('mousemove', (e) => {
         if (isDrawing && selectedItem) {
             // Show console message that item is being moved
             console.log('Moving selected item');
@@ -80,13 +80,13 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedTool.moveItem(dx, dy);
             startX = offsetX;
             startY = offsetY;
-            ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear temp canvas  
+            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear temp canvas  
         }
         else if (isDrawing && selectedTool.hasPreview) {
-            const rect = tempCanvas.getBoundingClientRect();
+            const rect = svgCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
-            ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear temp canvas
+            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear temp canvas
             
             // Directly pass startX, startY, currentX, currentY to drawShapePreview
             selectedTool.drawShape(startX, startY, currentX, currentY);
@@ -94,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 
     // Finalize the shape on mouse up
-    tempCanvas.addEventListener('mouseup', (e) => {
+    svgCanvas.addEventListener('mouseup', (e) => {
         
         if (isDrawing) {
-            const rect = tempCanvas.getBoundingClientRect();
+            const rect = svgCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
 
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 selectedTool = null;
             }
 
-            ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear preview
+            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear preview
         }
 
         isDrawing = false;
