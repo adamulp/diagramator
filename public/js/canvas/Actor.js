@@ -6,19 +6,16 @@ export default class Actor extends CanvasItem {
     }
 
     drawActor(x, y) {
-        // log the starting coordinates
         console.log(`Drawing actor at ${x}, ${y}`);
         this.setStartCoords(x, y);
-        // Create the actor SVG group
+
         const actorGroup = createSvgGroup(this.svgCanvas, {
             class: 'actor canvas-item',
             transform: `translate(${x}, ${y})`,
             stroke: 'black',
             fill: 'transparent'
         });
- 
 
-        // Add the head to the actor group.
         const head = createSvgElement('circle', {
             cx: '0',
             cy: '-30',
@@ -27,7 +24,6 @@ export default class Actor extends CanvasItem {
             fill: 'white'
         });
 
-        //Add the body to the actor group.
         const body = createSvgElement('line', {
             x1: '0',
             y1: '-15',
@@ -36,7 +32,6 @@ export default class Actor extends CanvasItem {
             stroke: 'black'
         });
 
-        //Add arms and legs similarly...
         const leftArm = createSvgElement('line', {
             x1: '0',
             y1: '-15',
@@ -69,7 +64,6 @@ export default class Actor extends CanvasItem {
             stroke: 'black'
         });
 
-        // Append elements to actor group
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
         appendSvgElement(actorGroup, leftArm);
@@ -77,7 +71,6 @@ export default class Actor extends CanvasItem {
         appendSvgElement(actorGroup, leftLeg);
         appendSvgElement(actorGroup, rightLeg);
 
-        // Add Label
         const label = createSvgElement('text', {
             x: '0',
             y: '60',
@@ -90,5 +83,6 @@ export default class Actor extends CanvasItem {
         this.svgGroup = actorGroup;
 
         appendSvgElement(this.svgCanvas, actorGroup);
+        this.addSelectionListener(actorGroup);
     }
 }
