@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const svgContext = svgCanvas.getContext('2d'); // Get 2D rendering context
     let selectedTool = null;
     let isDrawing = false;
+    let isMoving = false;
     let startX = 0;
     let startY = 0;
     let selectedItem = null;

@@ -52,6 +52,14 @@ export default class CanvasItem {
         element.setAttribute('stroke', 'blue');
 
     }
+
+    // Add event listener for selection
+    addSelectionListener(element) {
+        element.addEventListener('click', (e) => {
+            e.stopPropagation(); // Prevent click event from reaching parent
+            this.selectElement(element); // Bind to correct this
+        });
+    }
     
 }
 

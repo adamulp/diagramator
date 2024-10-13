@@ -3,6 +3,7 @@ class PointerTool {
         this.ctx = ctx;
         this.svgCanvas = svgCanvas;
         this.selectedItem = null;
+        this.movingItem = false;
     }
 
     selectItemAt(x, y) {
@@ -23,11 +24,24 @@ class PointerTool {
     }
 
     moveItem(dx, dy) {
-        if (this.selectedItem) {
+        if (!this.movingItem && this.selectedItem) {
+            this.selectedItem.classList.add('moving');
+            this.movingItem = true;
+        } else if (this.selectedItem) {
             const transform = this.selectedItem.transform.baseVal.consolidate();
             const matrix = transform ? transform.matrix : this.svgCanvas.createSVGMatrix();
             const newMatrix = matrix.translate(dx, dy);
             this.selectedItem.setAttribute('transform', `matrix(${newMatrix.a}, ${newMatrix.b}, ${newMatrix.c}, ${newMatrix.d}, ${newMatrix.e}, ${newMatrix.f})`);
+            
+        } else {
+            console.log('No item selected to move');
+        }
+    }
+
+    finalizeMove() {
+        if (this.selectedItem) {
+            this.selectedItem.classList.remove('moving');
+            this.movingItem = false;
         }
     }
 }

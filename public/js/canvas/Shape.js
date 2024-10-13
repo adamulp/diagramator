@@ -18,13 +18,7 @@ export default class Shape extends CanvasItem {
         throw new Error('drawShapePreview() must be implemented by the shape subclass');
     }
 
-    // Add event listener for selection
-    addSelectionListener(element) {
-        element.addEventListener('click', (e) => {
-            e.stopPropagation(); // Prevent click event from reaching parent
-            this.selectElement(element); // Bind to correct this
-        });
-    }
+    
 
     // Method to remove the preview element
     removePreviewElement() {
