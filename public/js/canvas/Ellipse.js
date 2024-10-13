@@ -4,7 +4,6 @@ import { createSvgElement, appendSvgElement } from '../utils/SvgUtils.js';
 export default class Ellipse extends Shape {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
-        this.previewElement = null; // Store the preview element    
     }
 
     // Method to set the starting coordinates

@@ -4,6 +4,7 @@ export default class Shape extends CanvasItem {
     constructor(ctx, svgCanvas) {
         super(ctx, svgCanvas);
         this.hasPreview = true;
+        this.previewElement = null;
     }
 
 

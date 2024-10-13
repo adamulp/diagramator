@@ -109,13 +109,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             } else if (selectedTool instanceof Shape) {
                 selectedTool.drawShape(startX, startY, currentX, currentY);
-                selectedTool = null;
             } else if (selectedTool instanceof Actor) {
                 selectedTool.drawActor(startX, startY, currentX, currentY);
-                selectedTool = null;
             }
 
-            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear preview
+            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height);
+            selectedTool.previewElement = null;
         }
 
         isDrawing = false;
