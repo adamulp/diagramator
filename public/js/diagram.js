@@ -110,7 +110,10 @@ document.addEventListener('DOMContentLoaded', function () {
             } else if (selectedTool instanceof Shape) {
                 selectedTool.drawShape(startX, startY, currentX, currentY);
             } else if (selectedTool instanceof Actor) {
-                selectedTool.drawActor(startX, startY, currentX, currentY);
+                // log values for startX, startY, currentX, currentY in console
+                console.log(`startX=${startX}, startY=${startY}, currentX=${currentX}, currentY=${currentY}`);
+                selectedTool.drawActor(startX, startY);
+                selectedTool.svgGroup = null;
             }
 
             svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height);

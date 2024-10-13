@@ -1,5 +1,4 @@
-import CanvasItem from './CanvasItem.js';
-import { createSvgElement, appendSvgElement, createSvgGroup } from '../utils/SvgUtils.js';
+import CanvasItem, { createSvgElement, appendSvgElement, createSvgGroup } from './CanvasItem.js';
 
 export default class Actor extends CanvasItem {
     constructor(ctx, svgCanvas) {
@@ -7,6 +6,9 @@ export default class Actor extends CanvasItem {
     }
 
     drawActor(x, y) {
+        // log the starting coordinates
+        console.log(`Drawing actor at ${x}, ${y}`);
+        this.setStartCoords(x, y);
         // Create the actor SVG group
         const actorGroup = createSvgGroup(this.svgCanvas, {
             class: 'actor',
@@ -14,12 +16,7 @@ export default class Actor extends CanvasItem {
             stroke: 'black',
             fill: 'transparent'
         });
-        createSvgElement('g', {
-            class: 'actor',
-            transform: `translate(${x}, ${y})`,
-            stroke: 'black',
-            fill: 'transparent'
-        });
+ 
 
         // Add the head to the actor group.
         const head = createSvgElement('circle', {
@@ -90,6 +87,7 @@ export default class Actor extends CanvasItem {
         });
         label.textContent = 'Actor';
         appendSvgElement(actorGroup, label);
+        this.svgGroup = actorGroup;
 
         appendSvgElement(this.svgCanvas, actorGroup);
     }
