@@ -6,7 +6,7 @@ export default class Actor extends CanvasItem {
         super(ctx, svgCanvas);
     }
 
-    createFinal(x, y) {
+    drawActor(x, y) {
         // Create the actor SVG group
         const actorGroup = createSvgGroup(this.svgCanvas, {
             class: 'actor',

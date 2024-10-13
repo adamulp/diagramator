@@ -1,9 +1,11 @@
+import CanvasItem from './canvas/CanvasItem.js';
+import Shape from './canvas/Shape.js';
 import Rectangle from './canvas/Rectangle.js';
 import Ellipse from './canvas/Ellipse.js';
 import Triangle from './canvas/Triangle.js';
 import Actor from './canvas/Actor.js';
 import PointerTool from './tooling/PointerTool.js';
-import CanvasItem from './canvas/CanvasItem.js';
+
 
 document.addEventListener('DOMContentLoaded', function () {
     const tempCanvas = document.getElementById('tempCanvas');
@@ -105,9 +107,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     selectedTool.finalizeMove();
                     selectedItem = null;
                 }
+            } else if (selectedTool instanceof Shape) {
+                selectedTool.drawShape(startX, startY, currentX, currentY);
+                selectedTool = null;
             } else if (selectedTool instanceof Actor) {
-                console.log('Actor to be created');
-                selectedTool.createFinal(currentX, currentY); // Add shape to svgCanvas
+                selectedTool.drawActor(startX, startY, currentX, currentY);
+                selectedTool = null;
             }
 
             ctx.clearRect(0, 0, tempCanvas.width, tempCanvas.height); // Clear preview
