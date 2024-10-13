@@ -1,5 +1,5 @@
 import Shape from './Shape.js';
-import { createSvgElement, appendSvgElement, createSvgGroup } from '../utils/SvgUtils.js';
+import { createSvgElement, appendSvgElement, createSvgGroup } from './CanvasItem.js';
 
 export default class Rectangle extends Shape {
     constructor(ctx, svgCanvas) {
