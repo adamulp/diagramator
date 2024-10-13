@@ -11,7 +11,7 @@ export default class Actor extends CanvasItem {
         this.setStartCoords(x, y);
         // Create the actor SVG group
         const actorGroup = createSvgGroup(this.svgCanvas, {
-            class: 'actor',
+            class: 'actor canvas-item',
             transform: `translate(${x}, ${y})`,
             stroke: 'black',
             fill: 'transparent'

@@ -38,12 +38,17 @@ export default class Triangle extends Shape {
         const points = `${x1},${y1} ${x2},${y2} ${x3},${y3}`;
 
         if (!this.previewElement) {
+            const triangleGroup = createSvgGroup(this.svgCanvas, {
+                class: 'triangle canvas-item',
+                stroke: 'black',
+                fill: 'transparent'
+            });
             this.previewElement = createSvgElement('polygon', {
                 points: points,
                 stroke: 'black',
                 fill: 'transparent'
             });
-            appendSvgElement(this.svgCanvas, this.previewElement);
+            appendSvgElement(triangleGroup, this.previewElement);
         } else {
             this.previewElement.setAttribute('points', points);
         }

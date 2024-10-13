@@ -37,6 +37,11 @@ export default class Rectangle extends Shape {
 
         // Create or update the preview element
         if (!this.previewElement) {
+            const rectGroup = createSvgGroup(this.svgCanvas, {
+                class: 'rectangle canvas-item',
+                stroke: 'black',
+                fill: 'transparent'
+            });
             this.previewElement = createSvgElement('rect', {
                 x: x,
                 y: y,
@@ -45,7 +50,7 @@ export default class Rectangle extends Shape {
                 stroke: 'black',
                 fill: 'transparent'
             });
-            appendSvgElement(this.svgCanvas, this.previewElement);
+            appendSvgElement(rectGroup, this.previewElement);
         } else {
             this.previewElement.setAttribute('x', x);
             this.previewElement.setAttribute('y', y);

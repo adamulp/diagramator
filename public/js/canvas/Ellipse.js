@@ -31,6 +31,12 @@ export default class Ellipse extends Shape {
     
         // Ensure the preview element exists or create it
         if (!this.previewElement) {
+            const ellipseGroup = createSvgGroup(this.svgCanvas, {
+                class: 'ellipse canvas-item',
+                stroke: 'black',
+                fill: 'transparent'
+            });
+
             this.previewElement = createSvgElement('ellipse', {
                 cx: x,
                 cy: y,
@@ -39,7 +45,7 @@ export default class Ellipse extends Shape {
                 stroke: 'black',
                 fill: 'transparent'
             });
-            appendSvgElement(this.svgCanvas, this.previewElement);
+            appendSvgElement(ellipseGroup, this.previewElement);
         } else {
             this.previewElement.setAttribute('cx', x);
             this.previewElement.setAttribute('cy', y);
