@@ -5,6 +5,7 @@ import Ellipse from './canvas/Ellipse.js';
 import Triangle from './canvas/Triangle.js';
 import Actor from './canvas/Actor.js';
 import PointerTool from './tooling/PointerTool.js';
+// import { is } from 'express/lib/request.js';
 
 
 document.addEventListener('DOMContentLoaded', function () {
@@ -46,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+
     // Start drawing on mouse down
     svgCanvas.addEventListener('mousedown', (e) => {
         // Check if PointerTool is selected
@@ -53,14 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
             const { offsetX, offsetY } = e;
             console.log(`Mouse down at (${offsetX}, ${offsetY})`);
             selectedItem = selectedTool.selectItemAt(offsetX, offsetY);
-            if (selectedItem) {
+
+            if (!isMoving && selectedItem !== null) {
+                isMoving = true;
+                // Show console message that item has been selected
+                console.log('Item has been selected and is moving.');
+            }
+
+            if(isMoving) {
                 startX = offsetX;
                 startY = offsetY;
-                isDrawing = true;
-                // Show console message that item has been selected
-                console.log('Item has been selected.');
                 return;
             }
+
         } else if (selectedTool instanceof CanvasItem) {
             isDrawing = true;
             const rect = svgCanvas.getBoundingClientRect();
@@ -72,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Draw preview on mouse move
     svgCanvas.addEventListener('mousemove', (e) => {
-        if (isDrawing && selectedItem) {
+        if (isMoving) {
             // Show console message that item is being moved
             console.log('Moving selected item');
             const { offsetX, offsetY } = e;
@@ -81,9 +88,8 @@ document.addEventListener('DOMContentLoaded', function () {
             selectedTool.moveItem(dx, dy);
             startX = offsetX;
             startY = offsetY;
-            svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height); // Clear temp canvas  
         }
-        else if (isDrawing && selectedTool.hasPreview) {
+        if (isDrawing && selectedTool.hasPreview) {
             const rect = svgCanvas.getBoundingClientRect();
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
@@ -102,13 +108,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const currentX = e.clientX - rect.left;
             const currentY = e.clientY - rect.top;
 
-            if (selectedTool instanceof PointerTool) {
-                // Logic for PointerTool
-                if (selectedItem) {
-                    selectedTool.finalizeMove();
-                    selectedItem = null;
-                }
-            } else if (selectedTool instanceof Shape) {
+            if (selectedTool instanceof Shape) {
                 selectedTool.drawShape(startX, startY, currentX, currentY);
             } else if (selectedTool instanceof Actor) {
                 // log values for startX, startY, currentX, currentY in console
@@ -120,7 +120,10 @@ document.addEventListener('DOMContentLoaded', function () {
             svgContext.clearRect(0, 0, svgCanvas.width, svgCanvas.height);
             selectedTool.previewElement = null;
         }
-
+        if (isMoving) {
+            selectedTool.finalizeMove();
+        }
+        isMoving = false;
         isDrawing = false;
     });
 });
