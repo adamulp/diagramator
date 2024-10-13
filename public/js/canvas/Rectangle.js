@@ -32,8 +32,8 @@ export default class Rectangle extends Shape {
         const height = Math.abs(currentY - startY);
 
         // Debugging logs
-        console.log(`Drawing preview: startX=${startX}, startY=${startY}, currentX=${currentX}, currentY=${currentY}`);
-        console.log(`Calculated dimensions: x=${x}, y=${y}, width=${width}, height=${height}`);
+        //console.log(`Drawing preview: startX=${startX}, startY=${startY}, currentX=${currentX}, currentY=${currentY}`);
+        //console.log(`Calculated dimensions: x=${x}, y=${y}, width=${width}, height=${height}`);
 
         // Create or update the preview element
         if (!this.previewElement) {

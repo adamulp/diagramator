@@ -16,6 +16,16 @@ export default class Actor extends CanvasItem {
             fill: 'transparent'
         });
 
+        // Define the bounding box for the entire actor group
+        const bbox = createSvgElement('rect', {
+            x: '-20',
+            y: '-45',
+            width: '40',
+            height: '108',
+            fill: 'transparent',
+            stroke: 'none'
+        });
+
         const head = createSvgElement('circle', {
             cx: '0',
             cy: '-30',
@@ -64,6 +74,7 @@ export default class Actor extends CanvasItem {
             stroke: 'black'
         });
 
+        appendSvgElement(actorGroup, bbox); // Add the bounding box first
         appendSvgElement(actorGroup, head);
         appendSvgElement(actorGroup, body);
         appendSvgElement(actorGroup, leftArm);
